@@ -4,7 +4,6 @@ import React from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { db } from './firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
-import { set } from 'mongoose';
 
 function App() {
   const API_KEY = import.meta.env.VITE_APP_API_KEY;
@@ -49,7 +48,6 @@ function App() {
     setActivityString(activityString);
     setActivityType([]);
     console.log(activityString);
-
   }
 
 
