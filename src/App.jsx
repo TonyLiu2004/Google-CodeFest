@@ -51,13 +51,34 @@ function App() {
     list = {};
   }
 
+  
+ 
+    const makePDF =() => {
+
+      let pdfButton = document.getElementById("pdfButton");
+      let makepdf = document.getElementById("makepdf");
+        let mywindow = window.open("", "PRINT", 
+                "height=400,width=600");
+ 
+        mywindow.document.write(makepdf.innerHTML);
+ 
+        mywindow.document.close();
+        mywindow.focus();
+ 
+        mywindow.print();
+        mywindow.close();
+ 
+        return true;
+    }
+
   return (
     <div>
       <input type="text" placeholder= "Location" onChange={(event) => setLocation(event.target.value)} value={location}/> <br/>
       <input type="text" placeholder="Budget" onChange={(event) => setBudget(event.target.value)} value={budget}/> <br/>
       <input type="text" placeholder="Activity" onChange={(event) => setActivity(event.target.value)} value={activity}/> <br/>
       <button id = "searchButton" onClick = {handleSubmit}>Submit</button> <br/>
-      <div className='results'></div>
+      <button id="pdfButton" onClick = {makePDF}>Generate PDF</button>
+      <div className='results' id='makepdf'></div>
     </div>
   )
 }
