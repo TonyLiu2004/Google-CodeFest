@@ -2,6 +2,8 @@ import { useState } from 'react'
 import './App.css'
 import React from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { db } from './firebaseConfig';
+import { collection, addDoc } from 'firebase/firestore';
 
 function App() {
   const API_KEY = import.meta.env.VITE_APP_API_KEY;
