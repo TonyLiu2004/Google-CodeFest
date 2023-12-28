@@ -7,11 +7,13 @@ import { collection, addDoc } from 'firebase/firestore';
 
 function App() {
   const API_KEY = import.meta.env.VITE_APP_API_KEY;
+
   const [location, setLocation] = useState("");
   const [budget, setBudget] = useState("");
   const [activity, setActivity] = useState("");
   const [response, setResponse] = useState("");
   let formatted = "";
+
   const handleSubmit = () => {
     if (location != "" && budget != "" && activity != "") {
       setLocation("");
@@ -75,11 +77,21 @@ function App() {
 
   return (
     <div>
+
+      <h1>
+        Travel Planner
+      </h1>
+
       <input type="text" placeholder="Location" onChange={(event) => setLocation(event.target.value)} value={location} /> <br />
+
       <input type="text" placeholder="Budget" onChange={(event) => setBudget(event.target.value)} value={budget} /> <br />
+
       <input type="text" placeholder="Activity" onChange={(event) => setActivity(event.target.value)} value={activity} /> <br />
+
       <button id="searchButton" onClick={handleSubmit}>Submit</button> <br />
+
       <button id="pdfButton" onClick={makePDF}>Generate PDF</button>
+
       <div className='results' id='makepdf'></div>
     </div>
   )
