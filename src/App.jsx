@@ -12,6 +12,16 @@ function App() {
   const [budget, setBudget] = useState("");
   const [activity, setActivity] = useState("");
   const [response, setResponse] = useState("");
+
+  //const [count, setCount] = useState(0); // will change display of questions
+  //const [display, setDisplay] = useState(false);
+  //const [season, setSeason] = useState(""); // maybe change to month
+  //const [temp, setTemp] = useState("");
+  //const [weather, setWeather] = useState(""); // maybe remove
+  //const [activityType, setActivityType] = useState([]); //they can pick multiple activities
+
+
+
   let formatted = "";
 
   const handleSubmit = () => {
@@ -21,6 +31,7 @@ function App() {
       setActivity("");
       let selected_div = document.querySelector('.results');
       selected_div.innerHTML = '';
+      setDisplay(true);
       fetchData();
     }
   }
@@ -37,7 +48,8 @@ function App() {
       const text = response.text();
       console.log("TEXT: ", text);
       setResponse(text);
-    } catch (error) {
+    }
+    catch (error) {
       setResponse("ERROR, try again");
       console.log("ERROR: ", error);
     }
@@ -90,9 +102,11 @@ function App() {
 
       <button id="searchButton" onClick={handleSubmit}>Submit</button> <br />
 
-      <button id="pdfButton" onClick={makePDF}>Generate PDF</button>
+      <br></br>
+      {display && <button id="pdfButton" onClick={makePDF}>Generate PDF</button>}
 
       <div className='results' id='makepdf'></div>
+
     </div>
   )
 }
