@@ -5,12 +5,18 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 function App() {
   const API_KEY = import.meta.env.VITE_APP_API_KEY;
-  const [input, setInput] = useState("");
+  const [location, setLocation] = useState("");
+  const [budget, setBudget] = useState("");
+  const [activity, setActivity] = useState("");
   const [response, setResponse] = useState("");
+  let formatted ="";
   const handleSubmit = () => {
-    if(input != "") {
-      console.log(input);
-      setInput("");
+    if(location != "" && budget != "" && activity != "") {
+      setLocation("");
+      setBudget("")
+      setActivity("");
+      let selected_div = document.querySelector('.results');
+      selected_div.innerHTML = '';
       fetchData();
     }
   }
@@ -20,7 +26,7 @@ function App() {
       const genAI = new GoogleGenerativeAI(API_KEY);
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-      const results = await model.generateContent(input);
+      const results = await model.generateContent("I want to "+activity+" in "+location+". My budget is "+budget);
       console.log("RESULTS: ", results);
       const response = results.response;
       console.log("RESPONSE: ", response);
@@ -33,11 +39,25 @@ function App() {
     }
   }
 
+  if(response!=""){
+    let selected_div = document.querySelector('.results');
+    let list = response.split("\n");
+    for(let i  = 0; i<list.length; i++){
+      var each_item= document.createElement('p');
+      each_item.textContent=list[i];
+      selected_div.appendChild(each_item);
+    }
+    setResponse("");
+    list = {};
+  }
+
   return (
     <div>
-      <input type="text" onChange={(event) => setInput(event.target.value)} value={input}/> <br/>
+      <input type="text" placeholder= "Location" onChange={(event) => setLocation(event.target.value)} value={location}/> <br/>
+      <input type="text" placeholder="Budget" onChange={(event) => setBudget(event.target.value)} value={budget}/> <br/>
+      <input type="text" placeholder="Activity" onChange={(event) => setActivity(event.target.value)} value={activity}/> <br/>
       <button id = "searchButton" onClick = {handleSubmit}>Submit</button> <br/>
-      {response}
+      <div className='results'></div>
     </div>
   )
 }
