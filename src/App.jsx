@@ -51,6 +51,26 @@ function App() {
     list = {};
   }
 
+
+
+  const makePDF = () => {
+
+    let pdfButton = document.getElementById("pdfButton");
+    let makepdf = document.getElementById("makepdf");
+    let mywindow = window.open("", "PRINT",
+      "height=400,width=600");
+
+    mywindow.document.write(makepdf.innerHTML);
+
+    mywindow.document.close();
+    mywindow.focus();
+
+    mywindow.print();
+    mywindow.close();
+
+    return true;
+  }
+
   return (
     <div>
       <input type="text" placeholder="Location" onChange={(event) => setLocation(event.target.value)} value={location} /> <br />
