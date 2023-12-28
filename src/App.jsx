@@ -4,6 +4,7 @@ import React from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { db } from './firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
+import { set } from 'mongoose';
 
 function App() {
   const API_KEY = import.meta.env.VITE_APP_API_KEY;
@@ -13,12 +14,43 @@ function App() {
   const [activity, setActivity] = useState("");
   const [response, setResponse] = useState("");
 
-  //const [count, setCount] = useState(0); // will change display of questions
-  //const [display, setDisplay] = useState(false);
+  const [count, setCount] = useState(0); // will change display of questions
+  const [display, setDisplay] = useState(false);
   //const [season, setSeason] = useState(""); // maybe change to month
   //const [temp, setTemp] = useState("");
   //const [weather, setWeather] = useState(""); // maybe remove
-  //const [activityType, setActivityType] = useState([]); //they can pick multiple activities
+  const [activityType, setActivityType] = useState([]); //they can pick multiple activities
+  const [activityString, setActivityString] = useState("");
+
+  const handleCheck = (event) => {
+    const value = event.target.value;
+    const isChecked = event.target.checked;
+
+    if (isChecked) {
+      setActivityType([...activityType, value]);
+    }
+    else {
+      setActivityType(activityType.filter((item) => item !== value));
+    }
+  }
+
+  const activitySubmit = (event) => {
+    event.preventDefault();
+    let activityString = "";
+
+    for (let i = 0; i < activityType.length; i++) {
+      activityString += activityType[i];
+      if (i != activityType.length - 1) {
+        activityString += ", ";
+      }
+    }
+
+    setCount(count + 1);
+    setActivityString(activityString);
+    setActivityType([]);
+    console.log(activityString);
+
+  }
 
 
 
@@ -93,6 +125,43 @@ function App() {
       <h1>
         Travel Planner
       </h1>
+
+      {count === 0 && <form>
+
+        <label>
+
+          <input type="checkbox" value="Food and Drinks" onChange={handleCheck} /> Food and Drinks
+
+        </label>
+
+        <br></br>
+
+        <label>
+
+          <input type="checkbox" value="Sightseeing" onChange={handleCheck} /> Sightseeing
+
+        </label>
+
+        <br></br>
+
+        <label>
+
+          <input type="checkbox" value="Outdoor adventures" onChange={handleCheck} /> Outdoor adventures
+
+        </label>
+
+        <br></br>
+
+        <label>
+
+          <input type="checkbox" value="Shopping" onChange={handleCheck} /> Shopping
+
+        </label>
+
+        <br></br>
+        <button onClick={activitySubmit}> Submit </button>
+      </form>
+      }
 
       <input type="text" placeholder="Location" onChange={(event) => setLocation(event.target.value)} value={location} /> <br />
 
