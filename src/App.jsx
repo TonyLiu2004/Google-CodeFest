@@ -9,9 +9,9 @@ function App() {
   const [budget, setBudget] = useState("");
   const [activity, setActivity] = useState("");
   const [response, setResponse] = useState("");
-  let formatted ="";
+  let formatted = "";
   const handleSubmit = () => {
-    if(location != "" && budget != "" && activity != "") {
+    if (location != "" && budget != "" && activity != "") {
       setLocation("");
       setBudget("")
       setActivity("");
@@ -21,30 +21,30 @@ function App() {
     }
   }
 
-  async function fetchData(){
+  async function fetchData() {
     try {
       const genAI = new GoogleGenerativeAI(API_KEY);
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-      const results = await model.generateContent("I want to "+activity+" in "+location+". My budget is "+budget);
+      const results = await model.generateContent("I want to " + activity + " in " + location + ". My budget is " + budget);
       console.log("RESULTS: ", results);
       const response = results.response;
       console.log("RESPONSE: ", response);
       const text = response.text();
       console.log("TEXT: ", text);
       setResponse(text);
-    } catch (error){
+    } catch (error) {
       setResponse("ERROR, try again");
       console.log("ERROR: ", error);
     }
   }
 
-  if(response!=""){
+  if (response != "") {
     let selected_div = document.querySelector('.results');
     let list = response.split("\n");
-    for(let i  = 0; i<list.length; i++){
-      var each_item= document.createElement('p');
-      each_item.textContent=list[i];
+    for (let i = 0; i < list.length; i++) {
+      var each_item = document.createElement('p');
+      each_item.textContent = list[i];
       selected_div.appendChild(each_item);
     }
     setResponse("");
@@ -53,10 +53,10 @@ function App() {
 
   return (
     <div>
-      <input type="text" placeholder= "Location" onChange={(event) => setLocation(event.target.value)} value={location}/> <br/>
-      <input type="text" placeholder="Budget" onChange={(event) => setBudget(event.target.value)} value={budget}/> <br/>
-      <input type="text" placeholder="Activity" onChange={(event) => setActivity(event.target.value)} value={activity}/> <br/>
-      <button id = "searchButton" onClick = {handleSubmit}>Submit</button> <br/>
+      <input type="text" placeholder="Location" onChange={(event) => setLocation(event.target.value)} value={location} /> <br />
+      <input type="text" placeholder="Budget" onChange={(event) => setBudget(event.target.value)} value={budget} /> <br />
+      <input type="text" placeholder="Activity" onChange={(event) => setActivity(event.target.value)} value={activity} /> <br />
+      <button id="searchButton" onClick={handleSubmit}>Submit</button> <br />
       <div className='results'></div>
     </div>
   )
