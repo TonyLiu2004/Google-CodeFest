@@ -79,7 +79,6 @@ function App() {
       <input type="text" placeholder="Budget" onChange={(event) => setBudget(event.target.value)} value={budget} /> <br />
       <input type="text" placeholder="Activity" onChange={(event) => setActivity(event.target.value)} value={activity} /> <br />
       <button id="searchButton" onClick={handleSubmit}>Submit</button> <br />
-      <div className='results'></div>
       <button id="pdfButton" onClick={makePDF}>Generate PDF</button>
       <div className='results' id='makepdf'></div>
     </div>
