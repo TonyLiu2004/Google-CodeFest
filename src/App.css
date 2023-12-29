@@ -12,3 +12,37 @@
 .read-the-docs {
   color: #888;
 }
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.2);
+  /* Semi-transparent black for blending */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  /* Shadow for depth */
+  position: fixed;
+  /* Fixed positioning to stick to the top */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #fff;
+  /* Light text for visibility on darker backgrounds */
+  padding: 0 10px;
+}
+
+.auth-links {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.results {
+  margin-top: 20px;
+  /* Add sufficient top margin to push down content below the fixed navbar */
+}
