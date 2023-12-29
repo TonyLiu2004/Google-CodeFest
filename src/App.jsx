@@ -4,12 +4,10 @@ import React from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import SignUp from './routes/SignUp';
-import SignIn from './routes/SignIn';
+import SignUp from './routes/SignUP';
+import SignIn from './routes/SignIn'
 import About from './routes/About';
 import Travel from './routes/Travel';
-import { db } from './firebaseConfig';
-import { collection, addDoc } from 'firebase/firestore';
 
 function App() {
   return (
