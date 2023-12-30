@@ -27,7 +27,8 @@ function Navbar() {
     }, [])
     return (
         <nav>
-            <Link to="/" className="nav-link">About</Link>
+            <Link to="/" className="nav-link">Home</Link>
+            <Link to="/about" className="nav-link">About</Link>
             <div className="auth-links">
                 {userAuth}
             </div>
