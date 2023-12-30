@@ -7,10 +7,18 @@ import { useNavigate } from 'react-router-dom';
 
 function About() {
 
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
     return (
         <div className="about">
-            <div className="about__heading">
+            This will be an about page
+        </div >
+    )
+}
+
+export default About;
+
+/*
+ <div className="about__heading">
                 <div className="about__heading-image">
                 <img src={about1} alt="hiking" />
                 </div>
@@ -24,9 +32,4 @@ function About() {
             <br></br>
 
             
-
-        </div >
-    )
-}
-
-export default About;
+*/
