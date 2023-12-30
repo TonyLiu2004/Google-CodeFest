@@ -8,6 +8,7 @@ import SignUp from './routes/SignUP';
 import SignIn from './routes/SignIn'
 import About from './routes/About';
 import Travel from './routes/Travel';
+import Saved from './routes/Saved';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/travel" element={<Travel />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/saved" element={<Saved />} />
       </Routes>
     </BrowserRouter>
   )
