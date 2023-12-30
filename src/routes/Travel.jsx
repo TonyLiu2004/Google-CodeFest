@@ -52,10 +52,6 @@ function Travel() {
         console.log(activityString);
     }
 
-
-
-    let formatted = "";
-
     const handleSubmit = () => {
         if (location != "" && budget != "" && activity != "") {
             setLocation("");
@@ -145,41 +141,38 @@ function Travel() {
 
             {destinationInMind === "No" && <div>
                 {count === 0 && <form>
-
+                    <h3>Desired Activities:</h3>
                     <label>
-
                         <input type="checkbox" value="Food and Drinks" onChange={handleCheck} /> Food and Drinks
-
                     </label>
-
                     <br></br>
-
                     <label>
-
                         <input type="checkbox" value="Sightseeing" onChange={handleCheck} /> Sightseeing
-
                     </label>
-
                     <br></br>
-
                     <label>
-
                         <input type="checkbox" value="Outdoor adventures" onChange={handleCheck} /> Outdoor adventures
-
                     </label>
-
                     <br></br>
-
                     <label>
-
                         <input type="checkbox" value="Shopping" onChange={handleCheck} /> Shopping
-
                     </label>
-
                     <br></br>
                     <button onClick={activitySubmit}> Submit </button>
                 </form>
                 }
+
+                <div className='climate'>
+                    <label for="climate">Choose a Climate:</label>
+                    <select name="climate" id="climate" form="climateform">
+                        <option value="Tropical">Tropical</option>
+                        <option value="Dry">Dry</option>
+                        <option value="Temperate">Temperate</option>
+                        <option value="Continental">Continental</option>
+                        <option value="Polar">Polar</option>
+                    </select>
+                </div>
+
             </div>}
 
             {destinationInMind === "Yes" && <div>
