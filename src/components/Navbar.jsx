@@ -9,24 +9,27 @@ function Navbar() {
         </>
     );
     useEffect(() => {
-        if(sessionStorage.getItem("accessToken") == null){
+        if (sessionStorage.getItem("accessToken") == null) {
             setUserAuth(
                 <>
-                    <Link to="/signin" className="nav-link"> Sign In </Link> 
+                    <Link to="/signin" className="nav-link"> Sign In </Link>
                     <Link to="/signup" className="nav-link"> Sign Up </Link>
                 </>
             );
-        }else{
+        } else {
             setUserAuth(
-                <Link className="nav-link" onClick={() => { sessionStorage.removeItem("accessToken"); location.reload(); }}> Logout </Link>
+                <>
+                    <Link to="/saved" className="nav-link"> Saved </Link>
+                    <Link className="nav-link" onClick={() => { sessionStorage.removeItem("accessToken"); location.reload(); }}> Logout </Link>
+                </>
             );
         }
-    },[])
+    }, [])
     return (
         <nav>
             <Link to="/" className="nav-link">About</Link>
             <div className="auth-links">
-                { userAuth }
+                {userAuth}
             </div>
         </nav>
     );
