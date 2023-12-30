@@ -69,12 +69,12 @@ function Travel() {
             const genAI = new GoogleGenerativeAI(API_KEY);
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-            const results = await model.generateContent("I want to " + activity + " in " + location + ". My budget is " + budget);
+            const results = await model.generateContent("I want to " + activity + " in " + location + ". My budget is " + budget + ". Put it in a list with a title and details");
             console.log("RESULTS: ", results);
             const response = results.response;
             console.log("RESPONSE: ", response);
             const text = response.text();
-            console.log("TEXT: ", text);
+            console.log("TEXT: \n", text);
             setResponse(text);
         }
         catch (error) {
@@ -82,13 +82,16 @@ function Travel() {
             console.log("ERROR: ", error);
         }
     }
-
+    
     if (response != "") {
         let selected_div = document.querySelector('.results');
         let list = response.split("\n");
         for (let i = 0; i < list.length; i++) {
             var each_item = document.createElement('p');
+            each_item.style="whiteSpace: 'pre-wrap';";
             each_item.textContent = list[i];
+            each_item.innerHTML = each_item.innerHTML.replace(/\*\*(.*?)\*\*/g, '[$1]');
+            each_item.innerHTML = each_item.innerHTML.replace('\*', '&#9; &bull;');
             selected_div.appendChild(each_item);
         }
         setResponse("");
@@ -104,7 +107,24 @@ function Travel() {
         let mywindow = window.open("", "PRINT",
             "height=400,width=600");
 
-        mywindow.document.write(makepdf.innerHTML);
+  mywindow.document.write(`
+    <html>
+      <head>
+        <style>
+          .bordered-container {
+            border: 1px solid #000; 
+            border-radius: 5px;
+            padding: 10px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="bordered-container">
+          ${makepdf.innerHTML}
+        </div>
+      </body>
+    </html>
+  `);
 
         mywindow.document.close();
         mywindow.focus();
@@ -186,8 +206,7 @@ function Travel() {
 
                 <br></br>
                 {display && <button id="pdfButton" onClick={makePDF}>Generate PDF</button>}
-
-                <div className='results' id='makepdf'></div>
+                <div className='results' id='makepdf' style={{ whiteSpace: 'pre-wrap' }}></div>
             </div>}
 
         </div>

@@ -23,3 +23,14 @@
 .climate label{
     padding: 2rem;
 }
+
+#makepdf{
+    text-align: left;
+    border:1px solid black;
+    border-radius: 10px;
+    padding:15px;
+    margin: 10px;
+    background-color: #313131;
+    white-space: pre-wrap;
+    max-width: 100%;
+}
