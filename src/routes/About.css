@@ -1,0 +1,29 @@
+.about{
+    margin: -0;
+}
+
+.about__heading{
+    position: relative;
+    display: inline-block;
+    text-align:center;
+}
+
+.about__heading-text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.about__heading-image{
+    margin: 0;
+    padding: 0;
+    display: block;
+    position: relative;
+    z-index: -1;
+}
+
+.about__heading-image img{
+    width: 100%;
+    height: 100%;
+}
