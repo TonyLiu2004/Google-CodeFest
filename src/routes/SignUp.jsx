@@ -24,6 +24,8 @@ function SignUp() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
                 />
+                <br />
+                <button type="submit"> Submit </button>
             </form>
         </div>
     );
