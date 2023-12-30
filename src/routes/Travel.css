@@ -12,3 +12,14 @@
 .read-the-docs {
     color: #888;
 }
+
+.climate{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.climate label{
+    padding: 2rem;
+}
