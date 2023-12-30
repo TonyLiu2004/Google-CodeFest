@@ -8,6 +8,8 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 function Travel() {
     const API_KEY = import.meta.env.VITE_APP_API_KEY;
 
+    const [destinationInMind, setDIM] = useState("");
+
     const [location, setLocation] = useState("");
     const [budget, setBudget] = useState("");
     const [activity, setActivity] = useState("");
@@ -124,55 +126,76 @@ function Travel() {
                 Travel Planner
             </h1>
 
-            {count === 0 && <form>
+            {destinationInMind != "No" && destinationInMind != "Yes" &&
 
-                <label>
-
-                    <input type="checkbox" value="Food and Drinks" onChange={handleCheck} /> Food and Drinks
-
-                </label>
-
-                <br></br>
-
-                <label>
-
-                    <input type="checkbox" value="Sightseeing" onChange={handleCheck} /> Sightseeing
-
-                </label>
-
-                <br></br>
-
-                <label>
-
-                    <input type="checkbox" value="Outdoor adventures" onChange={handleCheck} /> Outdoor adventures
-
-                </label>
-
-                <br></br>
-
-                <label>
-
-                    <input type="checkbox" value="Shopping" onChange={handleCheck} /> Shopping
-
-                </label>
-
-                <br></br>
-                <button onClick={activitySubmit}> Submit </button>
-            </form>
+                <h2>
+                    Do you have a destination in mind?
+                </h2>
             }
 
-            <input type="text" placeholder="Location" onChange={(event) => setLocation(event.target.value)} value={location} /> <br />
 
-            <input type="text" placeholder="Budget" onChange={(event) => setBudget(event.target.value)} value={budget} /> <br />
+            {destinationInMind != "No" && destinationInMind != "Yes" &&
+                <button onClick={() => setDIM("Yes")}> Yes </button>
+            }
 
-            <input type="text" placeholder="Activity" onChange={(event) => setActivity(event.target.value)} value={activity} /> <br />
+            {destinationInMind != "No" && destinationInMind != "Yes" && <br />}
 
-            <button id="searchButton" onClick={handleSubmit}>Submit</button> <br />
+            {destinationInMind != "No" && destinationInMind != "Yes" &&
+                <button onClick={() => setDIM("No")}> No </button>}
 
-            <br></br>
-            {display && <button id="pdfButton" onClick={makePDF}>Generate PDF</button>}
+            {destinationInMind === "No" && <div>
+                {count === 0 && <form>
 
-            <div className='results' id='makepdf'></div>
+                    <label>
+
+                        <input type="checkbox" value="Food and Drinks" onChange={handleCheck} /> Food and Drinks
+
+                    </label>
+
+                    <br></br>
+
+                    <label>
+
+                        <input type="checkbox" value="Sightseeing" onChange={handleCheck} /> Sightseeing
+
+                    </label>
+
+                    <br></br>
+
+                    <label>
+
+                        <input type="checkbox" value="Outdoor adventures" onChange={handleCheck} /> Outdoor adventures
+
+                    </label>
+
+                    <br></br>
+
+                    <label>
+
+                        <input type="checkbox" value="Shopping" onChange={handleCheck} /> Shopping
+
+                    </label>
+
+                    <br></br>
+                    <button onClick={activitySubmit}> Submit </button>
+                </form>
+                }
+            </div>}
+
+            {destinationInMind === "Yes" && <div>
+                <input type="text" placeholder="Location" onChange={(event) => setLocation(event.target.value)} value={location} /> <br />
+
+                <input type="text" placeholder="Budget" onChange={(event) => setBudget(event.target.value)} value={budget} /> <br />
+
+                <input type="text" placeholder="Activity" onChange={(event) => setActivity(event.target.value)} value={activity} /> <br />
+
+                <button id="searchButton" onClick={handleSubmit}>Submit</button> <br />
+
+                <br></br>
+                {display && <button id="pdfButton" onClick={makePDF}>Generate PDF</button>}
+
+                <div className='results' id='makepdf'></div>
+            </div>}
 
         </div>
     )
