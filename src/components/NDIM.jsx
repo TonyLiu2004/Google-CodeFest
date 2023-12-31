@@ -49,32 +49,53 @@ function NDIM() {
         setClimate(event.target.value);
     }
 
+    const handleDaysInput = (event) => {
+        setDays(event.target.value);
+    }
+
     const beginGenerate = (event) => {
         event.preventDefault();
-        let activityString = "";
-        let monthString = "";
+        let activityString1 = "";
+        let monthString1 = "";
 
         for (let i = 0; i < activities.length; i++) {
-            activityString += activities[i];
+            activityString1 += activities[i];
             if (i != activities.length - 1) {
-                activityString += ", ";
+                activityString1 += ", ";
             }
         }
-        setActivityString(activityString);
+        setActivityString(activityString1);
         setActivities([]);
 
         for (let i = 0; i < months.length; i++) {
-            monthString += months[i];
+            monthString1 += months[i];
             if (i != months.length - 1) {
-                monthString += ", ";
+                monthString1 += ", ";
             }
         }
-        setMonthString(monthString);
+        setMonthString(monthString1);
         setMonths([]);
 
-        console.log(monthString);
-        console.log(activityString);
-        console.log(climate)
+        fetchData();
+    }
+
+    async function fetchData() {
+        try {
+            const genAI = new GoogleGenerativeAI(API_KEY);
+            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+            const results = await model.generateContent("Create an itinerary for a location that matches the following criteria: " + activityString + " in " + monthString + " with a " + climate + " climate for " + days + " days");
+            console.log("RESULTS: ", results);
+            const response = results.response;
+            console.log("RESPONSE: ", response);
+            const text = response.text();
+            console.log("TEXT: \n", text);
+            //setResponse(text);
+        }
+        catch (error) {
+            setResponse("ERROR, try again");
+            console.log("ERROR: ", error);
+        }
     }
 
     return (
@@ -185,6 +206,16 @@ function NDIM() {
                         <option value="Polar">Polar</option>
                     </select>
                 </div>
+
+                <label htmlFor="days">Number of Days:</label>
+                <input
+                    type="number"
+                    id="days"
+                    value={days}
+                    onChange={handleDaysInput}
+                    min="1"
+                    max="30"
+                />
 
                 <br></br>
                 <button onClick={beginGenerate}> Generate </button>
