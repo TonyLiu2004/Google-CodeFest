@@ -2,7 +2,6 @@ import { useState } from 'react'
 import '../routes/Travel.css'
 import React from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { set } from 'mongoose';
 //import { db } from './firebaseConfig';
 //import { collection, addDoc } from 'firebase/firestore';
 
