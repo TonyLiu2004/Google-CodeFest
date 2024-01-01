@@ -103,13 +103,15 @@ function DIM() {
 
                 <input type="text" placeholder="Budget" onChange={(event) => setBudget(event.target.value)} value={budget} /> <br />
 
-                <input type="text" placeholder="Activity" onChange={(event) => setActivity(event.target.value)} value={activity} /> <br />
+                <input type="text" placeholder="Activity" onChange={(event) => setActivity(event.target.value)} value={activity} /> <br /> <br />
 
-                <button id="searchButton" onClick={handleSubmit}>Submit</button> <br />
+                <button id="searchButton" onClick={handleSubmit}> Generate Itinerary </button> <br />
 
                 <br></br>
-                {display && <button id="pdfButton" onClick={makePDF}>Generate PDF</button>}
                 <div className='results' id='makepdf' style={{ whiteSpace: 'pre-wrap' }}></div>
+
+                <br />
+                {display && <button id="pdfButton" onClick={makePDF}>Generate PDF</button>}
             </div>
 
         </div>
