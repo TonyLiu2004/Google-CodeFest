@@ -2,11 +2,17 @@ import { useState } from 'react'
 import '../routes/Travel.css'
 import React from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { db, auth } from '../firebaseConfig';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import jsPDF from 'jspdf';
 
 function DIM() {
     const API_KEY = import.meta.env.VITE_APP_API_KEY;
 
     const [display, setDisplay] = useState(false);
+    const [pdf, setPDF] = useState(null);
+    //const [pdfURL, setPDFURL] = useState("");
 
     //If they know where they want to go
     const [location, setLocation] = useState("");
@@ -56,7 +62,7 @@ function DIM() {
             each_item.innerHTML = each_item.innerHTML.replace('\*', '&#9; &bull;');
             selected_div.appendChild(each_item);
         }
-        setResponse("");
+        //setResponse("");
         list = {};
     }
 
@@ -95,6 +101,49 @@ function DIM() {
         return true;
     }
 
+    const saveItinerary = async () => {
+        const doc = new jsPDF(); //using this so that it's automatically formatted for PDF
+
+        // Formatting from GPT
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const pageHeight = doc.internal.pageSize.getHeight();
+        const margin = 20;
+        let y = 20;
+
+        const lines = doc.splitTextToSize(response, pageWidth - 2 * margin);
+
+        lines.forEach((line) => {
+            if (y > pageHeight - margin) {
+                doc.addPage();
+                y = margin;
+            }
+            doc.text(line, margin, y);
+            y += 10;
+        });
+
+        const pdfBlob = doc.output('blob');
+
+        const storage = getStorage();
+        const storageRef = ref(storage, `pdfs/${auth.currentUser.uid}/itinerary-${Date.now()}.pdf`);
+
+        try {
+            await uploadBytes(storageRef, pdfBlob);
+            const downloadURL = await getDownloadURL(storageRef);
+            await savePdfUrlToFirestore(downloadURL);
+        } catch (error) {
+            console.error("Error uploading file: ", error);
+        }
+    }
+
+    const savePdfUrlToFirestore = async (pdfUrl) => {
+        await addDoc(collection(db, "itineraries"), {
+            userId: auth.currentUser.uid,
+            pdfUrl,
+            createdAt: new Date()
+        });
+    }
+
+
     return (
         <div>
 
@@ -111,9 +160,18 @@ function DIM() {
                 <div className='results' id='makepdf' style={{ whiteSpace: 'pre-wrap' }}></div>
 
                 <br />
-                {display && <button id="pdfButton" onClick={makePDF}>Generate PDF</button>}
-            </div>
 
+                {display && <div>
+
+                    <button id="pdfButton" onClick={makePDF}>Generate PDF</button>
+                    <br />
+                    <br />
+                    <button onClick={saveItinerary}> Save Itinerary to Profile </button>
+
+                </div>}
+
+
+            </div>
         </div>
     )
 }
