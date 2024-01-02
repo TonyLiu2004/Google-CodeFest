@@ -11,7 +11,7 @@ function DIM() {
     const API_KEY = import.meta.env.VITE_APP_API_KEY;
 
     const [display, setDisplay] = useState(false);
-    const [pdf, setPDF] = useState(null);
+    //const [pdf, setPDF] = useState(null);
     //const [pdfURL, setPDFURL] = useState("");
 
     //If they know where they want to go
