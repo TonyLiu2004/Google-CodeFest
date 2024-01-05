@@ -32,12 +32,27 @@ function DIM() {
         }
     }
 
+    const aiOutputFilter = (input) => { //split the ai output into a list of strings
+        let ret = [];
+        let n = 1;
+        let prev = 0;
+        for(let i = 0;i < input.length; i++){
+            let s = n + ".";
+            if(input.substring(i,i + s.length) === s){
+                ret.push(input.substring(prev,i));
+                n++;
+                prev = i;
+            }
+        }
+        ret.push(input.substring(prev,input.length));
+        return ret;
+    }
     async function fetchData() {
         try {
             const genAI = new GoogleGenerativeAI(API_KEY);
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-            const results = await model.generateContent("I want to " + activity + " in " + location + ". My budget is " + budget + ". Put it in a list with a title and details");
+            const results = await model.generateContent("I want to " + activity + " in " + location + ". My budget is " + budget + ". Put it in a numbered list with a title and details. Include price rounded to the nearest whole number.");
             console.log("RESULTS: ", results);
             const response = results.response;
             console.log("RESPONSE: ", response);
@@ -52,18 +67,29 @@ function DIM() {
     }
 
     if (response != "") {
+        let t = aiOutputFilter(response);
+        console.log(t)
         let selected_div = document.querySelector('.results');
-        let list = response.split("\n");
-        for (let i = 0; i < list.length; i++) {
+        for(let i = 0; i < t.length; i++){
             var each_item = document.createElement('p');
             each_item.style = "whiteSpace: 'pre-wrap';";
-            each_item.textContent = list[i];
+            each_item.textContent = t[i];
             each_item.innerHTML = each_item.innerHTML.replace(/\*\*(.*?)\*\*/g, '[$1]');
             each_item.innerHTML = each_item.innerHTML.replace('\*', '&#9; &bull;');
+            each_item.innerHTML += "<br/><br/><br/>";
             selected_div.appendChild(each_item);
         }
-        //setResponse("");
-        list = {};
+        // let list = response.split("\n");
+        // for (let i = 0; i < list.length; i++) {
+        //     var each_item = document.createElement('p');
+        //     each_item.style = "whiteSpace: 'pre-wrap';";
+        //     each_item.textContent = list[i];
+        //     each_item.innerHTML = each_item.innerHTML.replace(/\*\*(.*?)\*\*/g, '[$1]');
+        //     each_item.innerHTML = each_item.innerHTML.replace('\*', '&#9; &bull;');
+        //     selected_div.appendChild(each_item);
+        // }
+        // list = {};
+        setResponse("");
     }
 
     const makePDF = () => {
