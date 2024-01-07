@@ -78,7 +78,7 @@ function NDIM() {
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
             const results = await model.generateContent("Create an itinerary with a title for a location that matches the following criteria: " + activityParameter + " in " + monthParameter + " with a " + climateParameter + " climate for " + daysParameter + " days with a budget of " + budgetParameter + " dollars. Please try to use around 80% of the budget.");
-
+            console.log("Create an itinerary with a title for a location that matches the following criteria: " + activityParameter + " in " + monthParameter + " with a " + climateParameter + " climate for " + daysParameter + " days with a budget of " + budgetParameter + " dollars. Please try to use around 80% of the budget.");
             console.log("RESULTS: ", results);
             const response = results.response;
             console.log("RESPONSE: ", response);

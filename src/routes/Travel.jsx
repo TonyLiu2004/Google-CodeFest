@@ -27,12 +27,8 @@ function Travel() {
 
             </div>}
 
-            {destinationInMind === "Yes" && <div>
-                <DIM />
-            </div>}
-
-            {destinationInMind === "No" && <div>
-                <NDIM />
+            {destinationInMind != "" && <div>
+                <DIM dim = {destinationInMind}/>
             </div>}
 
         </div>

@@ -7,8 +7,9 @@ import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import jsPDF from 'jspdf';
 
-function DIM() {
+function DIM({dim}) {
     const API_KEY = import.meta.env.VITE_APP_API_KEY;
+    const IMAGE_KEY = import.meta.env.IMAGE_KEY;
 
     const [display, setDisplay] = useState(false);
     //const [pdf, setPDF] = useState(null);
@@ -18,6 +19,12 @@ function DIM() {
     const [location, setLocation] = useState("");
     const [budget, setBudget] = useState("");
     const [activity, setActivity] = useState("");
+
+    const [duration, setDuration] = useState("");
+    const [group, setGroup] = useState(0);
+    const [style, setStyle] = useState("");
+    const [interests, getInterests] = useState("");
+    const [climate, setClimate] = useState("");
     const [response, setResponse] = useState("");
 
     const handleSubmit = () => {
@@ -32,6 +39,10 @@ function DIM() {
         }
     }
 
+    const handleSubmitNDIM = () => {
+        console.log("handlesubmit ndim");
+        console.log("CLIMATE: ", climate);
+    }
     const aiOutputFilter = (input) => { //split the ai output into a list of strings
         let ret = [];
         let n = 1;
@@ -70,13 +81,13 @@ function DIM() {
         let t = aiOutputFilter(response);
         console.log(t)
         let selected_div = document.querySelector('.results');
-        for(let i = 0; i < t.length; i++){
+        for(let i = 1; i < t.length; i++){ // ignore i=0 because it's the title
             var each_item = document.createElement('p');
             each_item.style = "whiteSpace: 'pre-wrap';";
             each_item.textContent = t[i];
             each_item.innerHTML = each_item.innerHTML.replace(/\*\*(.*?)\*\*/g, '[$1]');
             each_item.innerHTML = each_item.innerHTML.replace('\*', '&#9; &bull;');
-            each_item.innerHTML += "<br/><br/><br/>";
+            each_item.innerHTML += "<br/><br/>";
             selected_div.appendChild(each_item);
         }
         // let list = response.split("\n");
@@ -169,35 +180,61 @@ function DIM() {
         });
     }
 
-
     return (
         <div>
+            {dim === "Yes" && 
+                <div>
+                    <input type="text" placeholder="Location" onChange={(event) => setLocation(event.target.value)} value={location} /> <br />
 
-            <div>
-                <input type="text" placeholder="Location" onChange={(event) => setLocation(event.target.value)} value={location} /> <br />
+                    <input type="text" placeholder="Budget" onChange={(event) => setBudget(event.target.value)} value={budget} /> <br />
 
-                <input type="text" placeholder="Budget" onChange={(event) => setBudget(event.target.value)} value={budget} /> <br />
+                    <input type="text" placeholder="Activity" onChange={(event) => setActivity(event.target.value)} value={activity} /> <br /> <br />
 
-                <input type="text" placeholder="Activity" onChange={(event) => setActivity(event.target.value)} value={activity} /> <br /> <br />
+                    <button id="searchButton" onClick={handleSubmit}> Generate Itinerary </button> <br />
 
-                <button id="searchButton" onClick={handleSubmit}> Generate Itinerary </button> <br />
+                    <br></br>
+                    <div className='results' id='makepdf' style={{ whiteSpace: 'pre-wrap' }}></div>
 
-                <br></br>
-                <div className='results' id='makepdf' style={{ whiteSpace: 'pre-wrap' }}></div>
+                    <br />
+                </div>
+            }
+            {dim === "No" && 
+                <div>
+                    <label htmlFor="activities">Activities:</label><br/>
+                    <select multiple name = "activities" id="activities" form="activitiesform" onChange={() => setActivity(document.getElementById("activities").value)}>
+                        <option value="">No Preference</option>
+                        <optgroup label = "Outdoors" >
+                            <option value="Camping">Camping</option>
+                            <option value="Hiking">Hiking</option>
+                            <option value="Rock Climbing">Climbing</option>
+                            <option value="Biking">Cycling</option>
+                            <option value="Swimming">Swimming</option>
+                        </optgroup>
+                    </select>
 
+                    <br/>
+                    <label htmlFor="climate">Climate:</label>
+                    <select name="climate" id="climate" form="climateform" onChange={() => setClimate(document.getElementById("climate").value)}>
+                        <option value="">No Preference</option>
+                        <option value="Tropical">Tropical</option>
+                        <option value="Dry">Dry</option>
+                        <option value="Temperate">Temperate</option>
+                        <option value="Continental">Continental</option>
+                        <option value="Polar">Polar</option>
+                    </select>
+                    <br/>
+
+                    <button onClick={handleSubmitNDIM}> Generate Itinerary </button>
+                </div>
+            }
+
+
+            {display && <div>
+                <button id="pdfButton" onClick={makePDF}>Generate PDF</button>
                 <br />
-
-                {display && <div>
-
-                    <button id="pdfButton" onClick={makePDF}>Generate PDF</button>
-                    <br />
-                    <br />
-                    <button onClick={saveItinerary}> Save Itinerary to Profile </button>
-
-                </div>}
-
-
-            </div>
+                <br />
+                <button onClick={saveItinerary}> Save Itinerary to Profile </button>
+            </div>}
         </div>
     )
 }

@@ -34,3 +34,13 @@
     white-space: pre-wrap;
     max-width: 100%;
 }
+
+#activities {
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #000000;
+    width: 200px;
+    height: 100px;
+    background-color: #343434;
+  }
