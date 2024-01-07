@@ -29,6 +29,7 @@ function Travel() {
 
             {destinationInMind != "" && <div>
                 <DIM dim = {destinationInMind}/>
+                {/* <NDIM/> */}
             </div>}
 
         </div>

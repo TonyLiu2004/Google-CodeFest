@@ -35,6 +35,9 @@
     max-width: 100%;
 }
 
+#theForm{
+    text-align:left;
+}
 #activities {
     color: white;
     padding: 8px;
@@ -43,4 +46,28 @@
     width: 200px;
     height: 100px;
     background-color: #343434;
+  }
+
+  #activitiesform{
+    display:flex;
+    max-height:100%;
+    padding-bottom:5px;
+  }
+
+  .subActivities{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding-right:15px;
+    padding-left:15px;
+  }
+
+  #activitiesTop{
+    display:flex;
+    justify-content: space-between;
+  }
+
+  #otherActivities{
+    font-size: 14px;
+    margin-top:22px;
   }
