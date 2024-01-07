@@ -18,7 +18,8 @@ function DIM({dim}) {
     //If they know where they want to go
     const [location, setLocation] = useState("");
     const [budget, setBudget] = useState("");
-    const [activity, setActivity] = useState("");
+    const [activities, setActivities] = useState("");
+    const [otherActivities, setOtherActivities] = useState("");
 
     const [duration, setDuration] = useState("");
     const [group, setGroup] = useState(0);
@@ -27,11 +28,24 @@ function DIM({dim}) {
     const [climate, setClimate] = useState("");
     const [response, setResponse] = useState("");
 
+
+    const handleActivity = (event) => {
+        const value = event.target.value;
+        const isChecked = event.target.checked;
+
+        if (isChecked) {
+            setActivities([...activities, value]);
+        }
+        else {
+            setActivities(activities.filter((item) => item !== value));
+        }
+    }
+    
     const handleSubmit = () => {
-        if (location != "" && budget != "" && activity != "") {
+        if (location != "" && budget != "" && activities != "") {
             setLocation("");
             setBudget("")
-            setActivity("");
+            setActivities("");
             let selected_div = document.querySelector('.results');
             selected_div.innerHTML = '';
             setDisplay(true);
@@ -42,6 +56,17 @@ function DIM({dim}) {
     const handleSubmitNDIM = () => {
         console.log("handlesubmit ndim");
         console.log("CLIMATE: ", climate);
+        let activityString = "";
+        if(activities != {} && activities != ""){
+            activityString = activities.join(", ");
+        }
+        if(otherActivities != ""){
+            if(activityString != "") activityString += ", " + otherActivities;
+            else activityString += otherActivities;
+        }
+        console.log("ACTIVITIES: ", activityString);
+        console.log("Duration: ", duration);
+        console.log("BUDGET: ", budget);
     }
     const aiOutputFilter = (input) => { //split the ai output into a list of strings
         let ret = [];
@@ -63,7 +88,7 @@ function DIM({dim}) {
             const genAI = new GoogleGenerativeAI(API_KEY);
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-            const results = await model.generateContent("I want to " + activity + " in " + location + ". My budget is " + budget + ". Put it in a numbered list with a title and details. Include price rounded to the nearest whole number.");
+            const results = await model.generateContent("I want to " + activities + " in " + location + ". My budget is " + budget + ". Put it in a numbered list with a title and details. Include price rounded to the nearest whole number.");
             console.log("RESULTS: ", results);
             const response = results.response;
             console.log("RESPONSE: ", response);
@@ -86,7 +111,7 @@ function DIM({dim}) {
             each_item.style = "whiteSpace: 'pre-wrap';";
             each_item.textContent = t[i];
             each_item.innerHTML = each_item.innerHTML.replace(/\*\*(.*?)\*\*/g, '[$1]');
-            each_item.innerHTML = each_item.innerHTML.replace('\*', '&#9; &bull;');
+            each_item.innerHTML = each_item.innerHTML.replace('\*/g', '&#9; &bull;');
             each_item.innerHTML += "<br/><br/>";
             selected_div.appendChild(each_item);
         }
@@ -188,7 +213,7 @@ function DIM({dim}) {
 
                     <input type="text" placeholder="Budget" onChange={(event) => setBudget(event.target.value)} value={budget} /> <br />
 
-                    <input type="text" placeholder="Activity" onChange={(event) => setActivity(event.target.value)} value={activity} /> <br /> <br />
+                    <input type="text" placeholder="Activity" onChange={(event) => setActivities(event.target.value)} value={activities} /> <br /> <br />
 
                     <button id="searchButton" onClick={handleSubmit}> Generate Itinerary </button> <br />
 
@@ -199,22 +224,97 @@ function DIM({dim}) {
                 </div>
             }
             {dim === "No" && 
-                <div>
-                    <label htmlFor="activities">Activities:</label><br/>
-                    <select multiple name = "activities" id="activities" form="activitiesform" onChange={() => setActivity(document.getElementById("activities").value)}>
-                        <option value="">No Preference</option>
-                        <optgroup label = "Outdoors" >
-                            <option value="Camping">Camping</option>
-                            <option value="Hiking">Hiking</option>
-                            <option value="Rock Climbing">Climbing</option>
-                            <option value="Biking">Cycling</option>
-                            <option value="Swimming">Swimming</option>
-                        </optgroup>
-                    </select>
+                <div id="theForm">
+                    <form>
+                        <div id="activitiesTop">
+                            <h3 style={{marginBottom: "0px"}}>Desired Activities:</h3>
+                            <div style={{display:"flex"}}>
+                            <h3 style={{marginBottom:"0px"}}> Other: &nbsp;</h3>
+                            <input type="text" id="otherActivities" placeholder="Other Activities" onChange={(event) =>setOtherActivities(event.target.value)}></input>
+                            </div>
+                        </div>
+                        <div id="activitiesform">
+                            <div className="subActivities">
+                                <h4 style={{marginBottom: "5px"}}>Outdoors</h4>
+                                <label>
+                                    <input type="checkbox" value="Camping" onChange={handleActivity} /> Camping
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="Biking" onChange={handleActivity} /> Biking
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="Hiking" onChange={handleActivity} /> Hiking
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="Swimming" onChange={handleActivity} /> Swimming
+                                </label>
+                            </div>
+                            <div className="subActivities">
+                                <h4 style={{marginBottom: "5px"}}>Cultural</h4>
+                                <label>
+                                    <input type="checkbox" value="Museums and Art Galleries" onChange={handleActivity} /> Museums/Art
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="Historical tours" onChange={handleActivity} /> Historical tours
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="Local festivals" onChange={handleActivity} /> Local festivals
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="Performing arts" onChange={handleActivity} /> Performing arts
+                                </label>
+                            </div>
+                            <div className="subActivities">
+                                <h4 style={{marginBottom: "5px"}}>City Exploration</h4>
+                                <label>
+                                    <input type="checkbox" value="City Tours" onChange={handleActivity} /> City Tours 
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="Shopping" onChange={handleActivity} /> Shopping
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="Food" onChange={handleActivity} /> Food
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="Urban Parks" onChange={handleActivity} /> Urban Parks
+                                </label>
+                            </div>
+                            <div className="subActivities">
+                                <h4 style={{marginBottom: "5px"}}>Nature</h4>
+                                <label>
+                                    <input type="checkbox" value="Safari Tours" onChange={handleActivity} /> Safari Tours
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="Bird Watching" onChange={handleActivity} /> Bird Watching
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="Nature Reserves" onChange={handleActivity} /> Nature Reserves
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="Sightseeing" onChange={handleActivity} /> Sightseeing
+                                </label>
+                            </div>
+                            <div className="subActivities">
+                                <h4 style={{marginBottom: "5px"}}>Family</h4>
+                                <label>
+                                    <input type="checkbox" value="Amusement Parks" onChange={handleActivity} /> Amusement Parks
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="Zoos and Aquariums" onChange={handleActivity} /> Zoos and Aquariums
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="Beach" onChange={handleActivity} /> Beach
+                                </label>
+                                <label>
+                                    <input type="checkbox" value="Cruise" onChange={handleActivity} /> Cruise 
+                                </label>
+                            </div>
+                        </div>
+                    </form>
 
-                    <br/>
-                    <label htmlFor="climate">Climate:</label>
-                    <select name="climate" id="climate" form="climateform" onChange={() => setClimate(document.getElementById("climate").value)}>
+                    <hr/><br/>
+                    <label htmlFor="climate">Climate: &nbsp;</label>
+                    <select style= {{fontSize:"14px"}} name="climate" id="climate" form="climateform" onChange={() => setClimate(document.getElementById("climate").value)}>
                         <option value="">No Preference</option>
                         <option value="Tropical">Tropical</option>
                         <option value="Dry">Dry</option>
@@ -222,7 +322,27 @@ function DIM({dim}) {
                         <option value="Continental">Continental</option>
                         <option value="Polar">Polar</option>
                     </select>
-                    <br/>
+                    <br/><br/>
+
+                    <label htmlFor="days">Number of Days:</label>
+                    <input
+                        type="number"
+                        id="days"
+                        value={duration}
+                        onChange={(event) => setDuration(Math.max(1, parseInt(event.target.value, 10)))}
+                        min="1"
+                    />
+                    <br/><br/>
+
+                    <label htmlFor="budget">Budget (USD): &nbsp;</label>
+                    <input
+                        type="number"
+                        id="budget"
+                        placeholder="Enter your budget in USD"
+                        value={budget}
+                        onChange={(event) => setBudget(Math.max(0, parseInt(event.target.value, 10)))}
+                    />
+                    <br/><br/>
 
                     <button onClick={handleSubmitNDIM}> Generate Itinerary </button>
                 </div>
