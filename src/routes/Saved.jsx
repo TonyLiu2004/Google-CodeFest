@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { db, auth } from '../firebaseConfig';
 import { collection, query, where, getDocs } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 
 function Saved() {
     const [itineraries, setItineraries] = useState([]);
@@ -21,6 +22,8 @@ function Saved() {
         }
     }, []);
 
+    const navigate = useNavigate();
+
     return (
         <div>
 
@@ -28,13 +31,16 @@ function Saved() {
                 <ul>
                     {itineraries.map((url, index) => (
                         <li key={index}>
-                            <a href={url} target="_blank" rel="noopener noreferrer"> View itinerary </a>
+                            <a href={url} target="_blank"> View itinerary </a>
                             {console.log(url)}
                         </li>
                     ))}
                 </ul>
             ) : (
-                <p>No saved itineraries</p>
+                <div>
+                    <h1> No saved itineraries </h1>
+                    <button onClick={() => navigate("/travel")}> To Travel Generator </button>
+                </div>
             )}
 
         </div>
