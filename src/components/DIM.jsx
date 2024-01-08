@@ -7,7 +7,7 @@ import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import jsPDF from 'jspdf';
 
-function DIM({dim}) {
+function DIM({ dim }) {
     const API_KEY = import.meta.env.VITE_APP_API_KEY;
     const IMAGE_KEY = import.meta.env.IMAGE_KEY;
 
@@ -39,7 +39,7 @@ function DIM({dim}) {
             setActivities(activities.filter((item) => item !== value));
         }
     }
-    
+
     const handleSubmit = () => {
         if (location != "" && budget != "" && activities != "") {
             setLocation("");
@@ -54,35 +54,35 @@ function DIM({dim}) {
 
     function uncheckAllCheckboxes() {
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        
+
         checkboxes.forEach((checkbox) => {
             checkbox.checked = false;
         });
     }
     const handleSubmitNDIM = () => {
         let activityString = "";
-        if(activities != {} && activities != ""){
+        if (activities != {} && activities != "") {
             activityString = activities.join(", ");
         }
-        if(otherActivities != ""){
-            if(activityString != "") activityString += ", " + otherActivities;
+        if (otherActivities != "") {
+            if (activityString != "") activityString += ", " + otherActivities;
             else activityString += otherActivities;
         }
 
-        if(isNaN(duration)) alert("Number of days must be a number above 1!");
-        if(isNaN(group)) alert("Group size must be a number above 1!");
-        if(isNaN(budget)) alert("Budget must be a number above 1!");
+        if (isNaN(duration)) alert("Number of days must be a number above 1!");
+        if (isNaN(group)) alert("Group size must be a number above 1!");
+        if (isNaN(budget)) alert("Budget must be a number above 1!");
 
         let selected_div = document.querySelector('.results');
         selected_div.innerHTML = '';
 
         //formatting temp, temp is the prompt
         let temp = "";
-        if(activityString == "") alert("Must choose an activity!");
+        if (activityString == "") alert("Must choose an activity!");
         else temp = "I want to do these activities: " + activityString + ". ";
-        if(climate != "") temp+= "I want to do them in a place with a " + climate + " climate. ";
-        if(style != "") temp+= "The style I am looking for in this trip is a " + style + " style. ";
-        temp+= "This trip will be " + duration + " days long, my group size is " + group + " and my budget is " + budget + " USD. Please put it in a numbered list with a title and details. Include price rounded to the nearest whole number.";
+        if (climate != "") temp += "I want to do them in a place with a " + climate + " climate. ";
+        if (style != "") temp += "The style I am looking for in this trip is a " + style + " style. ";
+        temp += "This trip will be " + duration + " days long, my group size is " + group + " and my budget is " + budget + " USD. Please put it in a numbered list with a title and details. Include price rounded to the nearest whole number.";
         console.log(temp);
         setDisplay(true);
 
@@ -105,15 +105,15 @@ function DIM({dim}) {
         let ret = [];
         let n = 1;
         let prev = 0;
-        for(let i = 0;i < input.length; i++){
+        for (let i = 0; i < input.length; i++) {
             let s = n + ".";
-            if(input.substring(i,i + s.length) === s){
-                ret.push(input.substring(prev,i));
+            if (input.substring(i, i + s.length) === s) {
+                ret.push(input.substring(prev, i));
                 n++;
                 prev = i;
             }
         }
-        ret.push(input.substring(prev,input.length));
+        ret.push(input.substring(prev, input.length));
         return ret;
     }
     async function fetchData(query) {
@@ -138,7 +138,7 @@ function DIM({dim}) {
     if (response != "") {
         let t = aiOutputFilter(response);
         let selected_div = document.querySelector('.results');
-        for(let i = 0; i < t.length; i++){ 
+        for (let i = 0; i < t.length; i++) {
             var each_item = document.createElement('p');
             each_item.style = "whiteSpace: 'pre-wrap';";
             each_item.textContent = t[i];
@@ -147,7 +147,7 @@ function DIM({dim}) {
             each_item.innerHTML += "<br/><br/>";
             selected_div.appendChild(each_item);
         }
-        setResponse("");
+        //setResponse("");
     }
 
     const makePDF = () => {
@@ -217,6 +217,7 @@ function DIM({dim}) {
         } catch (error) {
             console.error("Error uploading file: ", error);
         }
+        setResponse("");
     }
 
     const savePdfUrlToFirestore = async (pdfUrl) => {
@@ -229,7 +230,7 @@ function DIM({dim}) {
 
     return (
         <div>
-            {dim === "Yes" && 
+            {dim === "Yes" &&
                 <div>
                     <input type="text" placeholder="Location" onChange={(event) => setLocation(event.target.value)} value={location} /> <br />
 
@@ -242,19 +243,19 @@ function DIM({dim}) {
                     <br></br>
                 </div>
             }
-            {dim === "No" && 
+            {dim === "No" &&
                 <div id="theForm">
                     <form>
                         <div id="activitiesTop">
-                            <h3 style={{marginBottom: "0px"}}>Desired Activities:</h3>
-                            <div style={{display:"flex"}}>
-                            <h3 style={{marginBottom:"0px"}}> Other: &nbsp;</h3>
-                            <input type="text" id="otherActivities" value={otherActivities} placeholder="Other Activities" onChange={(event) =>setOtherActivities(event.target.value)}></input>
+                            <h3 style={{ marginBottom: "0px" }}>Desired Activities:</h3>
+                            <div style={{ display: "flex" }}>
+                                <h3 style={{ marginBottom: "0px" }}> Other: &nbsp;</h3>
+                                <input type="text" id="otherActivities" value={otherActivities} placeholder="Other Activities" onChange={(event) => setOtherActivities(event.target.value)}></input>
                             </div>
                         </div>
                         <div id="activitiesform">
                             <div className="subActivities">
-                                <h4 style={{marginBottom: "5px"}}>Outdoors</h4>
+                                <h4 style={{ marginBottom: "5px" }}>Outdoors</h4>
                                 <label>
                                     <input type="checkbox" value="Camping" onChange={handleActivity} /> Camping
                                 </label>
@@ -269,7 +270,7 @@ function DIM({dim}) {
                                 </label>
                             </div>
                             <div className="subActivities">
-                                <h4 style={{marginBottom: "5px"}}>Cultural</h4>
+                                <h4 style={{ marginBottom: "5px" }}>Cultural</h4>
                                 <label>
                                     <input type="checkbox" value="Museums and Art Galleries" onChange={handleActivity} /> Museums/Art
                                 </label>
@@ -284,9 +285,9 @@ function DIM({dim}) {
                                 </label>
                             </div>
                             <div className="subActivities">
-                                <h4 style={{marginBottom: "5px"}}>City Exploration</h4>
+                                <h4 style={{ marginBottom: "5px" }}>City Exploration</h4>
                                 <label>
-                                    <input type="checkbox" value="City Tours" onChange={handleActivity} /> City Tours 
+                                    <input type="checkbox" value="City Tours" onChange={handleActivity} /> City Tours
                                 </label>
                                 <label>
                                     <input type="checkbox" value="Shopping" onChange={handleActivity} /> Shopping
@@ -299,7 +300,7 @@ function DIM({dim}) {
                                 </label>
                             </div>
                             <div className="subActivities">
-                                <h4 style={{marginBottom: "5px"}}>Nature</h4>
+                                <h4 style={{ marginBottom: "5px" }}>Nature</h4>
                                 <label>
                                     <input type="checkbox" value="Safari Tours" onChange={handleActivity} /> Safari Tours
                                 </label>
@@ -314,7 +315,7 @@ function DIM({dim}) {
                                 </label>
                             </div>
                             <div className="subActivities">
-                                <h4 style={{marginBottom: "5px"}}>Family</h4>
+                                <h4 style={{ marginBottom: "5px" }}>Family</h4>
                                 <label>
                                     <input type="checkbox" value="Amusement Parks" onChange={handleActivity} /> Amusement Parks
                                 </label>
@@ -325,15 +326,15 @@ function DIM({dim}) {
                                     <input type="checkbox" value="Beach" onChange={handleActivity} /> Beach
                                 </label>
                                 <label>
-                                    <input type="checkbox" value="Cruise" onChange={handleActivity} /> Cruise 
+                                    <input type="checkbox" value="Cruise" onChange={handleActivity} /> Cruise
                                 </label>
                             </div>
                         </div>
                     </form>
 
-                    <hr/><br/>
+                    <hr /><br />
                     <label htmlFor="climate">Climate: &nbsp;</label>
-                    <select style= {{fontSize:"14px"}} name="climate" id="climate" form="climateform" onChange={() => setClimate(document.getElementById("climate").value)}>
+                    <select style={{ fontSize: "14px" }} name="climate" id="climate" form="climateform" onChange={() => setClimate(document.getElementById("climate").value)}>
                         <option value="">No Preference</option>
                         <option value="Tropical">Tropical</option>
                         <option value="Dry">Dry</option>
@@ -341,10 +342,10 @@ function DIM({dim}) {
                         <option value="Continental">Continental</option>
                         <option value="Polar">Polar</option>
                     </select>
-                    <br/><br/>
+                    <br /><br />
 
                     <label htmlFor="style">Overall Style: &nbsp;</label>
-                    <select style= {{fontSize:"14px"}} name="style" id="style" form="styleform" onChange={() => setStyle(document.getElementById("style").value)}>
+                    <select style={{ fontSize: "14px" }} name="style" id="style" form="styleform" onChange={() => setStyle(document.getElementById("style").value)}>
                         <option value="">No Preference</option>
                         <option value="Adventurous">Adventurous</option>
                         <option value="Relaxed">Relaxed</option>
@@ -352,7 +353,7 @@ function DIM({dim}) {
                         <option value="Urban">Urban</option>
                         <option value="Family">Family</option>
                     </select>
-                    <br/><br/>
+                    <br /><br />
                     <label htmlFor="days">Number of Days: &nbsp;</label>
                     <input
                         type="number"
@@ -361,17 +362,17 @@ function DIM({dim}) {
                         onChange={(event) => setDuration(Math.max(1, parseInt(event.target.value, 10)))}
                         min="1"
                     />
-                    <br/><br/>
+                    <br /><br />
 
                     <label htmlFor="groupSize">Group Size: &nbsp;</label>
-                    <input 
+                    <input
                         type="number"
                         id="groupSize"
                         value={group}
                         onChange={(event) => setGroup(Math.max(1, parseInt(event.target.value, 10)))}
                         min="1"
                     />
-                    <br/><br/>
+                    <br /><br />
 
                     <label htmlFor="budget">Budget (USD): &nbsp;</label>
                     <input
@@ -381,9 +382,9 @@ function DIM({dim}) {
                         value={budget}
                         onChange={(event) => setBudget(Math.max(0, parseInt(event.target.value, 10)))}
                     />
-                    <br/><br/><hr/><br/>
+                    <br /><br /><hr /><br />
                     <button style={{ display: "block", margin: "0 auto" }} onClick={handleSubmitNDIM}> Generate Itinerary </button>
-                    <br/>
+                    <br />
                 </div>
             }
             <div className='results' id='makepdf' style={{ whiteSpace: 'pre-wrap' }}></div>
