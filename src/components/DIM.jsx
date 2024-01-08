@@ -17,14 +17,13 @@ function DIM({dim}) {
 
     //If they know where they want to go
     const [location, setLocation] = useState("");
-    const [budget, setBudget] = useState("");
+    const [budget, setBudget] = useState(0);
     const [activities, setActivities] = useState("");
     const [otherActivities, setOtherActivities] = useState("");
 
-    const [duration, setDuration] = useState("");
-    const [group, setGroup] = useState(0);
+    const [duration, setDuration] = useState(1);
+    const [group, setGroup] = useState(1);
     const [style, setStyle] = useState("");
-    const [interests, getInterests] = useState("");
     const [climate, setClimate] = useState("");
     const [response, setResponse] = useState("");
 
@@ -49,13 +48,18 @@ function DIM({dim}) {
             let selected_div = document.querySelector('.results');
             selected_div.innerHTML = '';
             setDisplay(true);
-            fetchData();
+            fetchData("I want to " + activities + " in " + location + ". My budget is " + budget + ". Put it in a numbered list with a title and details. Include price rounded to the nearest whole number.");
         }
     }
 
+    function uncheckAllCheckboxes() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        
+        checkboxes.forEach((checkbox) => {
+            checkbox.checked = false;
+        });
+    }
     const handleSubmitNDIM = () => {
-        console.log("handlesubmit ndim");
-        console.log("CLIMATE: ", climate);
         let activityString = "";
         if(activities != {} && activities != ""){
             activityString = activities.join(", ");
@@ -64,9 +68,38 @@ function DIM({dim}) {
             if(activityString != "") activityString += ", " + otherActivities;
             else activityString += otherActivities;
         }
-        console.log("ACTIVITIES: ", activityString);
-        console.log("Duration: ", duration);
-        console.log("BUDGET: ", budget);
+
+        if(isNaN(duration)) alert("Number of days must be a number above 1!");
+        if(isNaN(group)) alert("Group size must be a number above 1!");
+        if(isNaN(budget)) alert("Budget must be a number above 1!");
+
+        let selected_div = document.querySelector('.results');
+        selected_div.innerHTML = '';
+
+        //formatting temp, temp is the prompt
+        let temp = "";
+        if(activityString == "") alert("Must choose an activity!");
+        else temp = "I want to do these activities: " + activityString + ". ";
+        if(climate != "") temp+= "I want to do them in a place with a " + climate + " climate. ";
+        if(style != "") temp+= "The style I am looking for in this trip is a " + style + " style. ";
+        temp+= "This trip will be " + duration + " days long, my group size is " + group + " and my budget is " + budget + " USD. Please put it in a numbered list with a title and details. Include price rounded to the nearest whole number.";
+        console.log(temp);
+        setDisplay(true);
+
+        //resetting inputs
+        uncheckAllCheckboxes();
+        const climateSelect = document.getElementById('climate');
+        climateSelect.value = '';
+        const styleSelect = document.getElementById('style');
+        styleSelect.value = '';
+        setDuration(1);
+        setGroup(1);
+        setBudget(0);
+        setOtherActivities("");
+        setClimate("");
+        setActivities("");
+
+        fetchData(temp);
     }
     const aiOutputFilter = (input) => { //split the ai output into a list of strings
         let ret = [];
@@ -83,12 +116,12 @@ function DIM({dim}) {
         ret.push(input.substring(prev,input.length));
         return ret;
     }
-    async function fetchData() {
+    async function fetchData(query) {
         try {
             const genAI = new GoogleGenerativeAI(API_KEY);
             const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-            const results = await model.generateContent("I want to " + activities + " in " + location + ". My budget is " + budget + ". Put it in a numbered list with a title and details. Include price rounded to the nearest whole number.");
+            const results = await model.generateContent(query);
             console.log("RESULTS: ", results);
             const response = results.response;
             console.log("RESPONSE: ", response);
@@ -104,27 +137,16 @@ function DIM({dim}) {
 
     if (response != "") {
         let t = aiOutputFilter(response);
-        console.log(t)
         let selected_div = document.querySelector('.results');
-        for(let i = 1; i < t.length; i++){ // ignore i=0 because it's the title
+        for(let i = 0; i < t.length; i++){ 
             var each_item = document.createElement('p');
             each_item.style = "whiteSpace: 'pre-wrap';";
             each_item.textContent = t[i];
-            each_item.innerHTML = each_item.innerHTML.replace(/\*\*(.*?)\*\*/g, '[$1]');
-            each_item.innerHTML = each_item.innerHTML.replace('\*/g', '&#9; &bull;');
+            each_item.innerHTML = each_item.innerHTML.replace(/\*\*([\s\S]*?)\*\*/g, '[$1]');
+            each_item.innerHTML = each_item.innerHTML.replace(/^(\s*)\* (.*)$/gm, '$1&#9; &bull; $2');
             each_item.innerHTML += "<br/><br/>";
             selected_div.appendChild(each_item);
         }
-        // let list = response.split("\n");
-        // for (let i = 0; i < list.length; i++) {
-        //     var each_item = document.createElement('p');
-        //     each_item.style = "whiteSpace: 'pre-wrap';";
-        //     each_item.textContent = list[i];
-        //     each_item.innerHTML = each_item.innerHTML.replace(/\*\*(.*?)\*\*/g, '[$1]');
-        //     each_item.innerHTML = each_item.innerHTML.replace('\*', '&#9; &bull;');
-        //     selected_div.appendChild(each_item);
-        // }
-        // list = {};
         setResponse("");
     }
 
@@ -211,16 +233,13 @@ function DIM({dim}) {
                 <div>
                     <input type="text" placeholder="Location" onChange={(event) => setLocation(event.target.value)} value={location} /> <br />
 
-                    <input type="text" placeholder="Budget" onChange={(event) => setBudget(event.target.value)} value={budget} /> <br />
+                    <input type="text" placeholder="Activity" onChange={(event) => setActivities(event.target.value)} value={activities} /> <br />
 
-                    <input type="text" placeholder="Activity" onChange={(event) => setActivities(event.target.value)} value={activities} /> <br /> <br />
+                    <input type="text" placeholder="Budget" onChange={(event) => setBudget(event.target.value)} value={budget} /> <br /> <br />
 
                     <button id="searchButton" onClick={handleSubmit}> Generate Itinerary </button> <br />
 
                     <br></br>
-                    <div className='results' id='makepdf' style={{ whiteSpace: 'pre-wrap' }}></div>
-
-                    <br />
                 </div>
             }
             {dim === "No" && 
@@ -230,7 +249,7 @@ function DIM({dim}) {
                             <h3 style={{marginBottom: "0px"}}>Desired Activities:</h3>
                             <div style={{display:"flex"}}>
                             <h3 style={{marginBottom:"0px"}}> Other: &nbsp;</h3>
-                            <input type="text" id="otherActivities" placeholder="Other Activities" onChange={(event) =>setOtherActivities(event.target.value)}></input>
+                            <input type="text" id="otherActivities" value={otherActivities} placeholder="Other Activities" onChange={(event) =>setOtherActivities(event.target.value)}></input>
                             </div>
                         </div>
                         <div id="activitiesform">
@@ -324,12 +343,32 @@ function DIM({dim}) {
                     </select>
                     <br/><br/>
 
-                    <label htmlFor="days">Number of Days:</label>
+                    <label htmlFor="style">Overall Style: &nbsp;</label>
+                    <select style= {{fontSize:"14px"}} name="style" id="style" form="styleform" onChange={() => setStyle(document.getElementById("style").value)}>
+                        <option value="">No Preference</option>
+                        <option value="Adventurous">Adventurous</option>
+                        <option value="Relaxed">Relaxed</option>
+                        <option value="Cultural">Cultural</option>
+                        <option value="Urban">Urban</option>
+                        <option value="Family">Family</option>
+                    </select>
+                    <br/><br/>
+                    <label htmlFor="days">Number of Days: &nbsp;</label>
                     <input
                         type="number"
                         id="days"
                         value={duration}
                         onChange={(event) => setDuration(Math.max(1, parseInt(event.target.value, 10)))}
+                        min="1"
+                    />
+                    <br/><br/>
+
+                    <label htmlFor="groupSize">Group Size: &nbsp;</label>
+                    <input 
+                        type="number"
+                        id="groupSize"
+                        value={group}
+                        onChange={(event) => setGroup(Math.max(1, parseInt(event.target.value, 10)))}
                         min="1"
                     />
                     <br/><br/>
@@ -342,11 +381,12 @@ function DIM({dim}) {
                         value={budget}
                         onChange={(event) => setBudget(Math.max(0, parseInt(event.target.value, 10)))}
                     />
-                    <br/><br/>
-
-                    <button onClick={handleSubmitNDIM}> Generate Itinerary </button>
+                    <br/><br/><hr/><br/>
+                    <button style={{ display: "block", margin: "0 auto" }} onClick={handleSubmitNDIM}> Generate Itinerary </button>
+                    <br/>
                 </div>
             }
+            <div className='results' id='makepdf' style={{ whiteSpace: 'pre-wrap' }}></div>
 
 
             {display && <div>
