@@ -32,12 +32,24 @@ nav {
   text-decoration: none;
   color: #fff;
   /* Light text for visibility on darker backgrounds */
-  padding: 0 10px;
+  padding: 0 3rem;
+}
+
+.nav-links{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  padding: 0rem 4rem;
 }
 
 .auth-links {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+}
+
+.auth-links button{
+  opacity: 75%;
 }
 
 .results {
