@@ -585,6 +585,7 @@ function DIM({ dim }) {
                 <br />
                 <button onClick={saveItinerary}> Save Itinerary to Profile </button>
             </div>}
+            {sessionStorage.getItem("accessToken") != null && <button onClick={saveItinerary}> Save Itinerary to Profile </button>}
         </div>
     )
 }
