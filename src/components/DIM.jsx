@@ -6,6 +6,7 @@ import { db, auth } from '../firebaseConfig';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import jsPDF from 'jspdf';
+
 import NDIM from './NDIM';
 
 
@@ -119,8 +120,8 @@ function DIM({ dim }) {
         if(dim=="No"){
             temp+="Please mention one suitable country put the generated activities in a numbered list with a title and details. Include price rounded to the nearest whole number.";
         }else{
-            if(selectedCountry =="") 
-            alert("Location cannot be empty, try again");
+            if(selectedCountry =="None" || selectedCountry =="" ) 
+            alert("You mus select a country");
             else
             temp+="I would like to do the aforementioned activities in " + selectedCountry+". Please put the generated activities in a numbered list with a title and details. Include price rounded to the nearest whole number.";
         }
@@ -293,7 +294,7 @@ function DIM({ dim }) {
         <div>
             {dim === "Yes" &&
                 <div id="theForm">
-                <form>
+                <form className='activities-content'>
                     <div id="activitiesTop">
                         <h3 style={{ marginBottom: "0px" }}>Desired Activities:</h3>
                         <div style={{ display: "flex" }}>
