@@ -11,7 +11,7 @@ function Travel() {
     const [destinationInMind, setDIM] = useState("");
 
     return (
-        <div>
+        <div className='travel'>
             <h1>
                 Travel Planner
             </h1>
