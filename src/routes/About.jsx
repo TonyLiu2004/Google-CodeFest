@@ -1,35 +1,22 @@
 import React from "react";
-import about1 from "../assets/about1.jpg"
-
+import Feature from "../components/Feature";
 import "./About.css"
 
 import { useNavigate } from 'react-router-dom';
 
 function About() {
-
-    //const navigate = useNavigate();
     return (
         <div className="about">
-            This will be an about page
+            <div className="about__heading">
+                <h1>What we do</h1>
+            </div>
+            <div className="about__contents">
+                <Feature title="Plan" desc="A vacation shouldn't be stressful to plan, let us do all the work for you" />
+                <Feature title="Customize" desc='From hiking to museums to restaurants, we customize the itinerary entirely to how you want your vacation to look like' />
+                <Feature title="Go" desc='Create, save and download your favorite plans at any time from any where. Share the plan with your loved ones as well so they can share the journey with you.' />
+            </div>
         </div >
     )
 }
 
 export default About;
-
-/*
- <div className="about__heading">
-                <div className="about__heading-image">
-                <img src={about1} alt="hiking" />
-                </div>
-                <div className="about__heading-text">
-                    <h1>Travel like a LOCO</h1>
-                    <p>Plan your vacation efficiently with us</p>
-                    <button onClick={() => navigate("/travel")}> Travel Generator </button>
-                </div>
-            </div>
-            
-            <br></br>
-
-            
-*/
