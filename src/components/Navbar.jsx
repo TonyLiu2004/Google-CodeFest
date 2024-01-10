@@ -13,7 +13,7 @@ function Navbar() {
             setUserAuth(
                 <>
                     <Link to="/signin" className="nav-link"> Sign In </Link>
-                    <Link to="/signup" className="nav-link"> Sign Up </Link>
+                    <Link to="/signup" className="nav-link"><button>Sign Up</button>  </Link>
                 </>
             );
         } else {
@@ -27,8 +27,11 @@ function Navbar() {
     }, [])
     return (
         <nav>
+            <div className="nav-links">
             <Link to="/" className="nav-link">Home</Link>
-            <Link to="/about" className="nav-link">About</Link>
+            <Link to="/about" className="nav-link">Mission</Link>
+            <Link to="/travel" className="nav-link">Guest-Mode</Link>
+            </div>
             <div className="auth-links">
                 {userAuth}
             </div>
