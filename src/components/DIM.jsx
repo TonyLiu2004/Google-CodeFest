@@ -7,7 +7,7 @@ import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import jsPDF from 'jspdf';
 import NDIM from './NDIM';
-
+import Card from "./Card.jsx"
 
 function DIM({ dim }) {
     const API_KEY = import.meta.env.VITE_APP_API_KEY;
@@ -26,7 +26,6 @@ function DIM({ dim }) {
     const [style, setStyle] = useState("");
     const [climate, setClimate] = useState("");
     const [response, setResponse] = useState("");
-
 
     const handleActivity = (event) => {
         const value = event.target.value;
@@ -86,6 +85,7 @@ function DIM({ dim }) {
 
     const handleSubmitNDIM = () => {
         let activityString = "";
+        setResponse("");
         if (activities != {} && activities != "") {
             activityString = activities.join(", ");
         }
@@ -122,7 +122,7 @@ function DIM({ dim }) {
             if(selectedCountry =="") 
             alert("Location cannot be empty, try again");
             else
-            temp+="I would like to do the aforementioned activities in " + selectedCountry+". Please put the generated activities in a numbered list with a title and details. Include price rounded to the nearest whole number.";
+            temp+="I would like to do the aforementioned activities in " + selectedCountry+". Please put the generated activities in a numbered list (1.,2.,3.,etc.) each with a title and detailed bullet points. Go directly into the numbered list, no general title or anything else on the first line. Include price rounded to the nearest whole number.";
         }
         console.log(temp);
         //resetting inputs
@@ -150,14 +150,19 @@ function DIM({ dim }) {
         for (let i = 0; i < input.length; i++) {
             let s = n + ".";
             if (input.substring(i, i + s.length) === s) {
-                ret.push(input.substring(prev, i));
+                ret.push(input.substring(prev, i)
+                    .replace(/\*\*([\s\S]*?)\*\*/g, '[$1]')
+                    .replace(/^(\s*)\* (.*)$/gm, '$1\t• $2'));
                 n++;
                 prev = i;
             }
         }
-        ret.push(input.substring(prev, input.length));
+        ret.push(input.substring(prev, input.length)
+            .replace(/\*\*([\s\S]*?)\*\*/g, '[$1]')
+            .replace(/^(\s*)\* (.*)$/gm, '$1\t• $2'));
         return ret;
     }
+
     async function fetchData(query) {
         try {
             const genAI = new GoogleGenerativeAI(API_KEY);
@@ -183,13 +188,12 @@ function DIM({ dim }) {
             var each_item = document.createElement('p');
             each_item.style = "whiteSpace: 'pre-wrap';";
             each_item.textContent = t[i];
-            each_item.innerHTML = each_item.innerHTML.replace(/\*\*([\s\S]*?)\*\*/g, '[$1]');
-            each_item.innerHTML = each_item.innerHTML.replace(/^(\s*)\* (.*)$/gm, '$1&#9; &bull; $2');
             each_item.innerHTML += "<br/><br/>";
             selected_div.appendChild(each_item);
         }
         //setResponse("");
     }
+
 
     const makePDF = () => {
 
@@ -291,6 +295,7 @@ function DIM({ dim }) {
 
     return (
         <div>
+            {/* <Card input="cookie"></Card> */}
             {dim === "Yes" &&
                 <div id="theForm">
                 <form>
@@ -586,6 +591,8 @@ function DIM({ dim }) {
                 <button onClick={saveItinerary}> Save Itinerary to Profile </button>
             </div>}
             {sessionStorage.getItem("accessToken") != null && <button onClick={saveItinerary}> Save Itinerary to Profile </button>}
+
+            {response != "" && aiOutputFilter(response).map((item) => <Card input={item} />)}
         </div>
     )
 }
