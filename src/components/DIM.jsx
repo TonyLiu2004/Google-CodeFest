@@ -580,8 +580,14 @@ function DIM({ dim }) {
             }
 
             
-
-            <div className='results' id='makepdf' style={{ whiteSpace: 'pre-wrap' }}></div>
+            {/* {(display && response == "") &&
+                <div class="loader"></div>
+            } */}
+            <div className='results' id='makepdf' style={{ whiteSpace: 'pre-wrap' }}>
+                {(display && response == "") &&
+                    <div className="loader"></div>
+                }
+            </div>
 
 
             {display && <div>
