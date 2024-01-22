@@ -604,22 +604,25 @@ function DIM({ dim }) {
                 <br />
                 <br />
 
-                <input
-                    type="text"
-                    placeholder="Enter Display Name"
-                    value={displayName}
-                    onChange={handleDisplayNameChange}
-                />
-
-                <br />
-
-                <button onClick={saveItinerary}
-                    disabled={!displayName.trim()}
-                >
-                    Save Itinerary to Profile
-                </button>
-
             </div>}
+
+            {sessionStorage.getItem("accessToken") != null && display &&
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Enter Display Name"
+                        value={displayName}
+                        onChange={handleDisplayNameChange}
+                    />
+
+                    <br />
+
+                    <button onClick={saveItinerary}
+                        disabled={!displayName.trim()}
+                    >
+                        Save Itinerary to Profile
+                    </button>
+                </div>}
 
             {response != "" && aiOutputFilter(response).map((item) => <Card input={item} />)}
         </div>
