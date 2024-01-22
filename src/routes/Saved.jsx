@@ -1,17 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { db, auth } from '../firebaseConfig';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
 function Saved() {
     const [itineraries, setItineraries] = useState([]);
 
     const getSavedItineraries = async (userId) => {
-        const allItineraries = collection(db, "itineraries"); //get all itineraries from the db
-        const q = query(allItineraries, where("userId", "==", userId)); //query for specific itineraries
-        const userItineraries = await getDocs(q); //get actual docs
-        return userItineraries.docs.map(doc => doc.data().pdfUrl);
+        const allItineraries = collection(db, "itineraries");
+        const q = query(allItineraries, where("userId", "==", userId));
+        const userItineraries = await getDocs(q);
+        return userItineraries.docs.map(doc => ({
+            id: doc.id,
+            pdfUrl: doc.data().pdfUrl,
+            displayName: doc.data().displayName
+        }));
     }
+
+    const deleteItinerary = async (itineraryId) => {
+        try {
+            await deleteDoc(doc(db, "itineraries", itineraryId));
+            setItineraries(itineraries.filter(item => item.id !== itineraryId));
+        } catch (error) {
+            console.error("Error deleting itinerary: ", error);
+        }
+    };
 
     useEffect(() => {
         const currentUser = auth.currentUser;
@@ -26,13 +39,25 @@ function Saved() {
 
     return (
         <div>
-
             {itineraries.length > 0 ? (
                 <ul>
-                    {itineraries.map((url, index) => (
+                    {itineraries.map((item, index) => (
                         <li key={index}>
-                            <a href={url} target="_blank"> View itinerary </a>
-                            {console.log(url)}
+                            <a href={item.pdfUrl} target="_blank" rel="noopener noreferrer">{item.displayName}</a>
+
+                            <br />
+
+                            <iframe
+                                src={item.pdfUrl}
+                                width="300"
+                                height="400"
+                                title={item.displayName}
+                            ></iframe>
+
+                            <br />
+
+                            <button onClick={() => deleteItinerary(item.id)}>Delete</button>
+
                         </li>
                     ))}
                 </ul>
@@ -42,7 +67,6 @@ function Saved() {
                     <button onClick={() => navigate("/travel")}> To Travel Generator </button>
                 </div>
             )}
-
         </div>
     );
 }
