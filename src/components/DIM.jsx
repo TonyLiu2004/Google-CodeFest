@@ -17,6 +17,9 @@ function DIM({ dim }) {
     const amadeusApiKey = import.meta.env.VITE_AMADEUS_API_KEY;
     const amadeusApiSecret = import.meta.env.VITE_AMADEUS_API_SECRET;
 
+    const [token, setToken] = useState(null);
+    const [data, setData] = useState(null);
+
 
     const [display, setDisplay] = useState(false);
     //const [pdf, setPDF] = useState(null);
@@ -322,15 +325,46 @@ function DIM({ dim }) {
                 }
             });
 
+            setToken(response.data.access_token)
             console.log(response.data.access_token);
+
         } catch (error) {
             console.error('Error getting access token:', error);
         }
     };
 
+    const testFetch = async () => {
+        const url = 'https://test.api.amadeus.com/v1/shopping/flight-destinations?origin=PAR&maxPrice=200';
+        const accessToken = token;
+
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const responseData = await response.json();
+            //setData(responseData.data[0]);
+            setData(responseData.data);
+            console.log(data)
+
+        } catch (e) {
+            console.error('Error fetching data:', e);
+        }
+    };
+
     return (
         <div>
+
             <button onClick={getAccessToken}> TEST </button>
+            <br />
+            <button onClick={testFetch}> Test 2 </button>
+
             {/* <Card input="cookie"></Card> */}
             {dim === "Yes" &&
                 <div id="theForm">
