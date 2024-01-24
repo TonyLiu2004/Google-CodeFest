@@ -616,6 +616,7 @@ function DIM({ dim }) {
                     />
 
                     <br />
+                    <br />
 
                     <button onClick={saveItinerary}
                         disabled={!displayName.trim()}
