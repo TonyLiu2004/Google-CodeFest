@@ -8,10 +8,15 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import jsPDF from 'jspdf';
 import NDIM from './NDIM';
 import Card from "./Card.jsx"
+import axios from 'axios';
 
 function DIM({ dim }) {
     const API_KEY = import.meta.env.VITE_APP_API_KEY;
     const IMAGE_KEY = import.meta.env.IMAGE_KEY;
+
+    const amadeusApiKey = import.meta.env.VITE_AMADEUS_API_KEY;
+    const amadeusApiSecret = import.meta.env.VITE_AMADEUS_API_SECRET;
+
 
     const [display, setDisplay] = useState(false);
     //const [pdf, setPDF] = useState(null);
@@ -302,8 +307,30 @@ function DIM({ dim }) {
         setSelectedCountry(event.target.value);
     }
 
+    const getAccessToken = async () => {
+        try {
+            const params = new URLSearchParams();
+            params.append('grant_type', 'client_credentials');
+
+            params.append('client_id', amadeusApiKey);
+
+            params.append('client_secret', amadeusApiSecret);
+
+            const response = await axios.post('https://test.api.amadeus.com/v1/security/oauth2/token', params, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+
+            console.log(response.data.access_token);
+        } catch (error) {
+            console.error('Error getting access token:', error);
+        }
+    };
+
     return (
         <div>
+            <button onClick={getAccessToken}> TEST </button>
             {/* <Card input="cookie"></Card> */}
             {dim === "Yes" &&
                 <div id="theForm">
