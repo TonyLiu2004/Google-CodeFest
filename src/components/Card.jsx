@@ -1,10 +1,10 @@
 import React from "react";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, forwardRef } from 'react';
 import { createClient } from "pexels";
+import './Card.css';
 
-
-const Card = ({input}) => {
-    console.log("cardinput: ",input);
+const Card = ({input, index }) => {
+    //console.log("cardinput: ",input);
     const [img, setImg] = useState("");
     const client = createClient(
         "KUtGlNdqoJMg2UmXPMQUPhtbFH40Dv2TBiega6ochAT3ij6ZfRPKe7pF"
@@ -25,21 +25,23 @@ const Card = ({input}) => {
                 }
 
                 const data = await response.json();
-                console.log(data);
+                //console.log(data);
                 setImg(data.photos[0].src.original);
+
             } catch (error) {
                 alert('Error fetching data:', error);
             }
         };
         if(input != "") fetchData();
     }, [input]);
-    console.log(img);
+    //console.log(img);
+    
     return (
         <>
             {img != "" &&
                 <div className="card">
-                    <p>{input}</p>
-                    <img style={{height: "20%", width: "20%"}} src = {img} />
+                    <p id="card-text">{input}</p>
+                    <img id="card-image" src = {img} alt={input}/>
                 </div>
             }
         </>

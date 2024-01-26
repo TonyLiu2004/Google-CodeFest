@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect  } from 'react'
 import '../routes/Travel.css'
 import React from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
@@ -10,13 +10,9 @@ import Card from "./Card.jsx"
 
 function ItineraryGenerator({ dim }) {
     const API_KEY = import.meta.env.VITE_APP_API_KEY;
-    const IMAGE_KEY = import.meta.env.IMAGE_KEY;
 
     const [display, setDisplay] = useState(false);
-    //const [pdf, setPDF] = useState(null);
-    //const [pdfURL, setPDFURL] = useState("");
 
-    //If they know where they want to go
     const [budget, setBudget] = useState(0);
     const [activities, setActivities] = useState("");
     const [otherActivities, setOtherActivities] = useState("");
@@ -25,6 +21,18 @@ function ItineraryGenerator({ dim }) {
     const [style, setStyle] = useState("");
     const [climate, setClimate] = useState("");
     const [response, setResponse] = useState("");
+
+
+    //for pdf
+    const [cardInformation, setCardInformation] = useState([]);
+    const handleCardInformation = (info) => {
+        setCardInformation((prevInformation) => {
+            const updatedInformation = [...prevInformation];
+            updatedInformation[info.index] = info;
+            return updatedInformation;
+        });
+    };
+    console.log(cardInformation);
 
     const handleActivity = (event) => {
         const value = event.target.value;
@@ -38,18 +46,6 @@ function ItineraryGenerator({ dim }) {
         }
     }
 
-    /*const handleSubmit = () => {
-        if (location != "" && budget != "" && activities != "") {
-            setLocation("");
-            setBudget("")
-            setActivities("");
-            let selected_div = document.querySelector('.results');
-            selected_div.innerHTML = '';
-            setDisplay(true);
-            fetchData("I want to " + activities + " in " + location + ". My budget is " + budget + ". Put it in a numbered list with a title and details. Include price rounded to the nearest whole number.");
-        }
-    }*/
-
     function uncheckAllCheckboxes() {
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
@@ -57,28 +53,6 @@ function ItineraryGenerator({ dim }) {
             checkbox.checked = false;
         });
     }
-
-
-    /*let location ="";
-    
-    function generateLocation(prompt) {
-        const genAI = new GoogleGenerativeAI(API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-    
-        return model.generateContent(prompt)
-            .then(results => {
-                console.log("LRESULTS: ", results);
-                const response = results.response;
-                console.log(":RESPONSE: ", response);
-                const text = response.text();
-                console.log("LTEXT: \n", text);
-                location = text;
-            })
-            .catch(error => {
-                setLocation("ERROR, try again");
-                console.log("ERROR: ", error);
-            });
-    }*/
 
     const handleSubmitNDIM = () => {
         let activityString = "";
@@ -95,8 +69,8 @@ function ItineraryGenerator({ dim }) {
         if (isNaN(group)) alert("Group size must be a number above 1!");
         if (isNaN(budget)) alert("Budget must be a number above 1!");
 
-        let selected_div = document.querySelector('.results');
-        selected_div.innerHTML = '';
+        // let selected_div = document.querySelector('.results');
+        // selected_div.innerHTML = '';
 
         //formatting temp, temp is the prompt
         let temp = "";
@@ -136,7 +110,7 @@ function ItineraryGenerator({ dim }) {
         setOtherActivities("");
         setClimate("");
         setActivities("");
-
+        setCardInformation([]);
 
         fetchData(temp);
     }
@@ -148,7 +122,7 @@ function ItineraryGenerator({ dim }) {
             let s = n + ".";
             if (input.substring(i, i + s.length) === s) {
                 ret.push(input.substring(prev, i)
-                    .replace(/\*\*([\s\S]*?)\*\*/g, '[$1]')
+                    .replace(/\*\*([\s\S]*?)\*\*/g, '$1')
                     .replace(/^(\s*)\* (.*)$/gm, '$1\t• $2'));
                 n++;
                 prev = i;
@@ -178,26 +152,36 @@ function ItineraryGenerator({ dim }) {
         }
     }
 
-    if (response != "") {
-        let t = aiOutputFilter(response);
-        let selected_div = document.querySelector('.results');
-        for (let i = 0; i < t.length; i++) {
-            var each_item = document.createElement('p');
-            each_item.style = "whiteSpace: 'pre-wrap';";
-            each_item.textContent = t[i];
-            each_item.innerHTML += "<br/><br/>";
-            selected_div.appendChild(each_item);
-        }
-        //setResponse("");
-    }
-
+    // if (response != "") {
+    //     let t = aiOutputFilter(response);
+    //     let selected_div = document.querySelector('.results');
+    //     for (let i = 0; i < t.length; i++) {
+    //         var each_item = document.createElement('p');
+    //         each_item.style = "whiteSpace: 'pre-wrap';";
+    //         each_item.textContent = t[i];
+    //         each_item.innerHTML += "<br/><br/>";
+    //         selected_div.appendChild(each_item);
+    //     }
+    //     //setResponse("");
+    // }
 
     const makePDF = () => {
 
         let pdfButton = document.getElementById("pdfButton");
-        let makepdf = document.getElementById("makepdf");
+        //let makepdf = document.getElementById("makepdf");
         let mywindow = window.open("", "PRINT",
             "height=400,width=600");
+
+        const cardContainer = document.createElement('div');
+        cardContainer.innerHTML = document.getElementsByClassName("cards")[0].innerHTML;
+        
+        const modifiedHTML = cardContainer.innerHTML
+        .replace(/<p id="card-text"/g, '<p style="white-space: pre-wrap; text-align: left; margin-right:30px; margin-left:10px; " id="card-text"')
+        .replace(/<div class="card"/g, '<div style="display: flex; justify-content: space-between; border: 1px solid black; border-radius: 4px; background-color: rgba(56, 56, 56, 0.611); margin-bottom:10px"')
+        .replace(/<img[^>]*src="([^"]*)"[^>]*>/g, '<img style="width: 35%; height: auto; max-width: 400px; max-height: 400px;" src="$1" />');
+
+        console.log("CARD INFO:");
+        console.log(modifiedHTML);
 
         mywindow.document.write(`
     <html>
@@ -212,7 +196,7 @@ function ItineraryGenerator({ dim }) {
       </head>
       <body>
         <div class="bordered-container">
-          ${makepdf.innerHTML}
+            ${modifiedHTML}
         </div>
       </body>
     </html>
@@ -301,7 +285,6 @@ function ItineraryGenerator({ dim }) {
 
     return (
         <div>
-            {/* <Card input="cookie"></Card> */}
             {dim === "Yes" &&
                 <div id="theForm">
                     <form>
@@ -585,16 +568,13 @@ function ItineraryGenerator({ dim }) {
                 </div>
             }
 
-
-            {/* {(display && response == "") &&
-                <div class="loader"></div>
-            } */}
-            <div className='results' id='makepdf' style={{ whiteSpace: 'pre-wrap' }}>
-                {(display && response == "") &&
+            <div className="cards">
+                {(display && response == "") ?
                     <div className="loader"></div>
+                    : aiOutputFilter(response).map((item, index) => <Card key={index} index={index} input={item}/>)
                 }
             </div>
-
+            <br/>
 
             {display && <div>
                 <button id="pdfButton" onClick={makePDF}>Generate PDF</button>
@@ -622,7 +602,8 @@ function ItineraryGenerator({ dim }) {
                     </button>
                 </div>}
 
-            {response != "" && aiOutputFilter(response).map((item) => <Card input={item} />)}
+                {/* <div className='results' id='makepdf'></div> */}
+            {/* {response != "" && aiOutputFilter(response).map((item) => <Card input={item} />)} */}
         </div>
     )
 }
