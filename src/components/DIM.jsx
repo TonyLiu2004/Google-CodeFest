@@ -15,10 +15,6 @@ function DIM({ dim }) {
     const amadeusApiKey = import.meta.env.VITE_AMADEUS_API_KEY;
     const amadeusApiSecret = import.meta.env.VITE_AMADEUS_API_SECRET;
 
-    const [token, setToken] = useState(null);
-    const [data, setData] = useState(null);
-
-
     const [display, setDisplay] = useState(false);
     //const [pdf, setPDF] = useState(null);
     //const [pdfURL, setPDFURL] = useState("");
