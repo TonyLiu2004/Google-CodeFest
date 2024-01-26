@@ -6,9 +6,7 @@ import { db, auth } from '../firebaseConfig';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import jsPDF from 'jspdf';
-import NDIM from './NDIM';
 import Card from "./Card.jsx"
-import axios from 'axios';
 
 function DIM({ dim }) {
     const API_KEY = import.meta.env.VITE_APP_API_KEY;
@@ -310,61 +308,8 @@ function DIM({ dim }) {
         setSelectedCountry(event.target.value);
     }
 
-    const getAccessToken = async () => {
-        try {
-            const params = new URLSearchParams();
-            params.append('grant_type', 'client_credentials');
-
-            params.append('client_id', amadeusApiKey);
-
-            params.append('client_secret', amadeusApiSecret);
-
-            const response = await axios.post('https://test.api.amadeus.com/v1/security/oauth2/token', params, {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            });
-
-            setToken(response.data.access_token)
-            console.log(response.data.access_token);
-
-        } catch (error) {
-            console.error('Error getting access token:', error);
-        }
-    };
-
-    const testFetch = async () => {
-        const url = 'https://test.api.amadeus.com/v1/shopping/flight-destinations?origin=PAR&maxPrice=200';
-        const accessToken = token;
-
-        try {
-            const response = await fetch(url, {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            const responseData = await response.json();
-            //setData(responseData.data[0]);
-            setData(responseData.data);
-            console.log(data)
-
-        } catch (e) {
-            console.error('Error fetching data:', e);
-        }
-    };
-
     return (
         <div>
-
-            <button onClick={getAccessToken}> TEST </button>
-            <br />
-            <button onClick={testFetch}> Test 2 </button>
-
             {/* <Card input="cookie"></Card> */}
             {dim === "Yes" &&
                 <div id="theForm">

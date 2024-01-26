@@ -1,0 +1,175 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+
+function FlightSearch() {
+    const [flights, setFlights] = useState([]);
+    const [origin, setOrigin] = useState('');
+    const [destination, setDestination] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const amadeusApiKey = 'your_amadeus_api_key';
+    const amadeusApiSecret = 'your_amadeus_api_secret';
+    let token = null;
+
+    const getAccessToken = async () => {
+        try {
+            const params = new URLSearchParams();
+            params.append('grant_type', 'client_credentials');
+            params.append('client_id', amadeusApiKey);
+            params.append('client_secret', amadeusApiSecret);
+
+            const response = await axios.post('https://test.api.amadeus.com/v1/security/oauth2/token', params, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+
+            token = response.data.access_token;
+            return token;
+        } catch (error) {
+            console.error('Error getting access token:', error);
+            return null;
+        }
+    };
+
+    const getCheapestFlights = async () => {
+        try {
+            const token = await getAccessToken();
+            if (token) {
+                const response = await axios.get(`https://test.api.amadeus.com/v1/shopping/flight-destinations?origin=${origin}&destination=${destination}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setFlights(response.data.data);
+            }
+        } catch (error) {
+            console.error("Error fetching flights", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSearch = async () => {
+        setLoading(true);
+        await getCheapestFlights();
+    };
+
+    return (
+        <div>
+            <input 
+                type="text" 
+                value={origin}
+                onChange={(e) => setOrigin(e.target.value.toUpperCase())}
+                placeholder="Enter origin city code (e.g., PAR)"
+            />
+            <input 
+                type="text" 
+                value={destination}
+                onChange={(e) => setDestination(e.target.value.toUpperCase())}
+                placeholder="Enter destination city code (e.g., LON)"
+            />
+            <button onClick={handleSearch} disabled={loading}>
+                {loading ? 'Loading...' : 'Search Flights'}
+            </button>
+            {flights.length > 0 && (
+                <div>
+                    {flights.map((flight, index) => (
+                        <div key={index}>
+                            <p>Destination: {flight.destination}</p>
+                            <p>Price: {flight.price.total}</p>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default FlightSearch;
+
+
+
+import React, { useState } from 'react';
+import axios from 'axios';
+
+function FlightSearch() {
+    const [flights, setFlights] = useState([]);
+    const [origin, setOrigin] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const amadeusApiKey = import.meta.env.VITE_AMADEUS_API_KEY;
+    const amadeusApiSecret = import.meta.env.VITE_AMADEUS_API_SECRET;
+    let token = null;
+
+    const getAccessToken = async () => {
+        try {
+            const params = new URLSearchParams();
+            params.append('grant_type', 'client_credentials');
+            params.append('client_id', amadeusApiKey);
+            params.append('client_secret', amadeusApiSecret);
+
+            const response = await axios.post('https://test.api.amadeus.com/v1/security/oauth2/token', params, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+
+            token = response.data.access_token;
+            return token;
+        } catch (error) {
+            console.error('Error getting access token:', error);
+            return null;
+        }
+    };
+
+    const getCheapestFlights = async () => {
+        try {
+            const token = await getAccessToken();
+            if (token) {
+                const response = await axios.get(`https://test.api.amadeus.com/v1/shopping/flight-destinations?origin=${origin}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setFlights(response.data.data);
+            }
+        } catch (error) {
+            console.error("Error fetching flights", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleSearch = async () => {
+        setLoading(true);
+        await getCheapestFlights();
+    };
+
+    return (
+        <div>
+            <input
+                type="text"
+                value={origin}
+                onChange={(e) => setOrigin(e.target.value)}
+                placeholder="Enter origin city code (e.g., PAR)"
+            />
+            <br />
+            <button onClick={handleSearch} disabled={loading}>
+                {loading ? 'Loading...' : 'Search Flights'}
+            </button>
+            {flights.length > 0 && (
+                <div>
+                    {flights.map((flight, index) => (
+                        <div key={index}>
+                            <p>Destination: {flight.destination}</p>
+                            <p>Price: {flight.price.total}</p>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default FlightSearch;

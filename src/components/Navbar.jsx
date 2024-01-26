@@ -20,6 +20,7 @@ function Navbar() {
         } else {
             setUserAuth(
                 <>
+                    <Link to="/prices" className="nav-link"> Price Esimator </Link>
                     <Link to="/saved" className="nav-link"> Saved </Link>
                     <Link className="nav-link" onClick={() => { sessionStorage.removeItem("accessToken"); location.reload(); }}> Logout </Link>
                 </>

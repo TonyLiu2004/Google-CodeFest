@@ -10,6 +10,7 @@ import Home from './routes/Home';
 import About from './routes/About';
 import Travel from './routes/Travel';
 import Saved from './routes/Saved';
+import FlightSearchComponent from './components/PriceEstimator';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/saved" element={<Saved />} />
+        <Route path="/prices" element={<FlightSearchComponent />} />
       </Routes>
     </BrowserRouter>
 
