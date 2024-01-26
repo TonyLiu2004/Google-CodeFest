@@ -1,11 +1,7 @@
 import { useState } from 'react'
 import './Travel.css'
 import React from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-//import { db } from './firebaseConfig';
-//import { collection, addDoc } from 'firebase/firestore';
-import DIM from '../components/DIM';
-import NDIM from '../components/NDIM';
+import ItineraryGenerator from '../components/ItineraryGen';
 
 function Travel() {
     const [destinationInMind, setDIM] = useState("");
@@ -28,8 +24,7 @@ function Travel() {
             </div>}
 
             {destinationInMind != "" && <div>
-                <DIM dim = {destinationInMind}/>
-                {/* <NDIM/> */}
+                <ItineraryGenerator dim={destinationInMind} />
             </div>}
 
         </div>

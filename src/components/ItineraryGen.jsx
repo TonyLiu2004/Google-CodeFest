@@ -2,18 +2,15 @@ import { useState, useEffect } from 'react'
 import '../routes/Travel.css'
 import React from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { db, auth } from '../firebaseConfig';
+import { db, auth } from '../firebaseConfig.js';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import jsPDF from 'jspdf';
 import Card from "./Card.jsx"
 
-function DIM({ dim }) {
+function ItineraryGenerator({ dim }) {
     const API_KEY = import.meta.env.VITE_APP_API_KEY;
     const IMAGE_KEY = import.meta.env.IMAGE_KEY;
-
-    const amadeusApiKey = import.meta.env.VITE_AMADEUS_API_KEY;
-    const amadeusApiSecret = import.meta.env.VITE_AMADEUS_API_SECRET;
 
     const [display, setDisplay] = useState(false);
     //const [pdf, setPDF] = useState(null);
@@ -60,8 +57,6 @@ function DIM({ dim }) {
             checkbox.checked = false;
         });
     }
-
-
 
 
     /*let location ="";
@@ -632,4 +627,4 @@ function DIM({ dim }) {
     )
 }
 
-export default DIM;
+export default ItineraryGenerator;
