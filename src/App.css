@@ -16,8 +16,8 @@ nav {
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: rgba(0, 0, 0, 0.2);
-  /* Semi-transparent black for blending */
+  background-color: rgba(50, 50, 50, 1);
+  /* 0, 0, 0, 0.2 for transparent if you don't like updated */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   /* Shadow for depth */
   position: fixed;
@@ -35,7 +35,7 @@ nav {
   padding: 0 3rem;
 }
 
-.nav-links{
+.nav-links {
   display: flex;
   align-items: flex-start;
   justify-content: space-evenly;
@@ -48,7 +48,7 @@ nav {
   align-items: center;
 }
 
-.auth-links button{
+.auth-links button {
   opacity: 75%;
 }
 

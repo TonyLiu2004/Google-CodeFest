@@ -12,8 +12,11 @@ const FlightSearchComponent = () => {
     const [destination, setDestination] = useState('');
     const [nonStop, setNonStop] = useState(false);
     const [adults, setAdults] = useState(1);
+    const [children, setChildren] = useState(0);
+    const [infants, setInfants] = useState(0);
     const [departureDate, setDepartureDate] = useState('');
     const [returnDate, setReturnDate] = useState('');
+    const [flightClass, setFlightClass] = useState('ECONOMY');
     const [flights, setFlights] = useState([]);
 
     const fetchAccessToken = async () => {
@@ -37,7 +40,7 @@ const FlightSearchComponent = () => {
 
     const getCheapestFlights = async (token) => {
         try {
-            const response = await axios.get(`${API_URL}?originLocationCode=${origin}&destinationLocationCode=${destination}&departureDate=${departureDate}&returnDate=${returnDate}&adults=${adults}&nonStop=${nonStop}&currencyCode=USD&max=2`, {
+            const response = await axios.get(`${API_URL}?originLocationCode=${origin}&destinationLocationCode=${destination}&departureDate=${departureDate}&returnDate=${returnDate}&adults=${adults}&children=${children}&infants=${infants}&nonStop=${nonStop}&currencyCode=USD&max=2`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -70,6 +73,14 @@ const FlightSearchComponent = () => {
                 <br />
 
                 <input type="number" value={adults} onChange={(e) => setAdults(e.target.value)} />
+
+                <br />
+
+                <input type="number" value={children} onChange={(e) => setChildren(e.target.value)} />
+
+                <br />
+
+                <input type="number" value={infants} onChange={(e) => setInfants(e.target.value)} />
 
                 <br />
 
