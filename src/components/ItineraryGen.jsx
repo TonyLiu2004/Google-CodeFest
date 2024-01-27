@@ -1,4 +1,4 @@
-import { useState, useEffect  } from 'react'
+import { useState, useEffect } from 'react'
 import '../routes/Travel.css'
 import React from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
@@ -174,11 +174,11 @@ function ItineraryGenerator({ dim }) {
 
         const cardContainer = document.createElement('div');
         cardContainer.innerHTML = document.getElementsByClassName("cards")[0].innerHTML;
-        
+
         const modifiedHTML = cardContainer.innerHTML
-        .replace(/<p id="card-text"/g, '<p style="white-space: pre-wrap; text-align: left; margin-right:30px; margin-left:10px; " id="card-text"')
-        .replace(/<div class="card"/g, '<div style="display: flex; justify-content: space-between; border: 1px solid black; border-radius: 4px; background-color: rgba(56, 56, 56, 0.611); margin-bottom:10px"')
-        .replace(/<img[^>]*src="([^"]*)"[^>]*>/g, '<img style="width: 35%; height: auto; max-width: 400px; max-height: 400px;" src="$1" />');
+            .replace(/<p id="card-text"/g, '<p style="white-space: pre-wrap; text-align: left; margin-right:30px; margin-left:10px; " id="card-text"')
+            .replace(/<div class="card"/g, '<div style="display: flex; justify-content: space-between; border: 1px solid black; border-radius: 4px; background-color: rgba(56, 56, 56, 0.611); margin-bottom:10px"')
+            .replace(/<img[^>]*src="([^"]*)"[^>]*>/g, '<img style="width: 35%; height: auto; max-width: 400px; max-height: 400px;" src="$1" />');
 
         console.log("CARD INFO:");
         console.log(modifiedHTML);
@@ -571,10 +571,10 @@ function ItineraryGenerator({ dim }) {
             <div className="cards">
                 {(display && response == "") ?
                     <div className="loader"></div>
-                    : aiOutputFilter(response).map((item, index) => <Card key={index} index={index} input={item}/>)
+                    : aiOutputFilter(response).map((item, index) => <Card key={index} index={index} input={item} />)
                 }
             </div>
-            <br/>
+            <br />
 
             {display && <div>
                 <button id="pdfButton" onClick={makePDF}>Generate PDF</button>
@@ -602,7 +602,7 @@ function ItineraryGenerator({ dim }) {
                     </button>
                 </div>}
 
-                {/* <div className='results' id='makepdf'></div> */}
+            {/* <div className='results' id='makepdf'></div> */}
             {/* {response != "" && aiOutputFilter(response).map((item) => <Card input={item} />)} */}
         </div>
     )

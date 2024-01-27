@@ -16,7 +16,7 @@ const FlightSearchComponent = () => {
     const [infants, setInfants] = useState(0);
     const [departureDate, setDepartureDate] = useState('');
     const [returnDate, setReturnDate] = useState('');
-    const [flightClass, setFlightClass] = useState('ECONOMY');
+    //const [flightClass, setFlightClass] = useState('ECONOMY');
     const [flights, setFlights] = useState([]);
 
     const fetchAccessToken = async () => {
@@ -113,11 +113,15 @@ const FlightSearchComponent = () => {
                     {flights.map((flight, index) => (
                         <div key={index}>
                             <p>{`From: ${flight.itineraries[0].segments[0].departure.iataCode}, To: ${flight.itineraries[0].segments[0].arrival.iataCode}`}</p>
+                            <p>{`Carrier: ${flight.itineraries[0].segments[0].carrierCode}`}</p>
+                            <p>{`Departure Time: ${flight.itineraries[0].segments[0].departure.at}`}</p>
+                            <p>{`Arrival Time: ${flight.itineraries[0].segments[0].arrival.at}`}</p>
                             <p>{`Price: ${flight.price.total}`}</p>
                         </div>
                     ))}
                 </div>
             )}
+
         </div>
     );
 };
