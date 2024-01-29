@@ -6,7 +6,8 @@ import { db, auth } from '../firebaseConfig.js';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import jsPDF from 'jspdf';
-import Card from "./Card.jsx"
+import html2canvas from "html2canvas";
+import Card from "./Card.jsx";
 
 function ItineraryGenerator({ dim }) {
     const API_KEY = import.meta.env.VITE_APP_API_KEY;
@@ -21,19 +22,6 @@ function ItineraryGenerator({ dim }) {
     const [style, setStyle] = useState("");
     const [climate, setClimate] = useState("");
     const [response, setResponse] = useState("");
-
-
-    //for pdf
-    const [cardInformation, setCardInformation] = useState([]);
-
-    const handleCardInformation = (info) => {
-        setCardInformation((prevInformation) => {
-            const updatedInformation = [...prevInformation];
-            updatedInformation[info.index] = info;
-            return updatedInformation;
-        });
-    };
-    console.log(cardInformation);
 
     const handleActivity = (event) => {
         const value = event.target.value;
@@ -111,8 +99,6 @@ function ItineraryGenerator({ dim }) {
         setOtherActivities("");
         setClimate("");
         setActivities("");
-        setCardInformation([]);
-
         fetchData(temp);
     }
 
@@ -131,7 +117,7 @@ function ItineraryGenerator({ dim }) {
             }
         }
         ret.push(input.substring(prev, input.length)
-            .replace(/\*\*([\s\S]*?)\*\*/g, '[$1]')
+            .replace(/\*\*([\s\S]*?)\*\*/g, '$1')
             .replace(/^(\s*)\* (.*)$/gm, '$1\t• $2'));
         return ret;
     }
@@ -166,7 +152,6 @@ function ItineraryGenerator({ dim }) {
     //     }
     //     //setResponse("");
     // }
-
     const makePDF = () => {
 
         let pdfButton = document.getElementById("pdfButton");
@@ -182,9 +167,8 @@ function ItineraryGenerator({ dim }) {
             .replace(/<div class="card"/g, '<div style="display: flex; justify-content: space-between; border: 1px solid black; border-radius: 4px; background-color: rgba(56, 56, 56, 0.611); margin-bottom:10px"')
             .replace(/<img[^>]*src="([^"]*)"[^>]*>/g, '<img style="width: 35%; height: auto; max-width: 400px; max-height: 400px;" src="$1" />');
 
-        console.log("CARD INFO:");
-        console.log(modifiedHTML);
-
+        // console.log("CARD INFO:");
+        // console.log(modifiedHTML);
         mywindow.document.write(`
     <html>
       <head>
@@ -210,7 +194,7 @@ function ItineraryGenerator({ dim }) {
         mywindow.print();
         mywindow.close();
 
-        return true;
+        return modifiedHTML;
     }
 
     const [displayName, setDisplayName] = useState('');
@@ -220,38 +204,60 @@ function ItineraryGenerator({ dim }) {
     }
 
     const saveItinerary = async () => {
-        const doc = new jsPDF(); //using this so that it's automatically formatted for PDF
+        const pdf = new jsPDF("p", "mm", "a4");
+        const data = document.getElementById("cards");
+    try {
+        const canvas = await html2canvas(data, { logging: true, letterRendering: 1, useCORS: true });
+        const imgWidth = 210;
+        const imgHeight = canvas.height * imgWidth / canvas.width;
 
-        // Formatting from GPT
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const pageHeight = doc.internal.pageSize.getHeight();
-        const margin = 20;
-        let y = 20;
-
-        const lines = doc.splitTextToSize(response, pageWidth - 2 * margin);
-
-        lines.forEach((line) => {
-            if (y > pageHeight - margin) {
-                doc.addPage();
-                y = margin;
+        const imgData = canvas.toDataURL("image/png");
+        const totalPages = Math.ceil(imgHeight / pdf.internal.pageSize.getHeight());
+        // Loop through pages
+        for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+            // Add a new page for each iteration
+            if (pageIndex > 0) {
+                pdf.addPage();
             }
-            doc.text(line, margin, y);
-            y += 10;
-        });
 
-        const pdfBlob = doc.output('blob');
+            // Adjust y position based on the pageIndex
+            const adjustedY = - (pageIndex * pdf.internal.pageSize.getHeight());
 
+            pdf.addImage(imgData, "PNG", 0, adjustedY, imgWidth, imgHeight);
+        }
+        const pdfBlob = pdf.output('blob');
         const storage = getStorage();
         const storageRef = ref(storage, `pdfs/${auth.currentUser.uid}/itinerary-${Date.now()}.pdf`);
 
-        try {
-            await uploadBytes(storageRef, pdfBlob);
-            const downloadURL = await getDownloadURL(storageRef);
-            await savePdfUrlToFirestore(downloadURL, displayName);
-        } catch (error) {
-            console.error("Error uploading file: ", error);
-        }
+        await uploadBytes(storageRef, pdfBlob);
+        const downloadURL = await getDownloadURL(storageRef);
+        await savePdfUrlToFirestore(downloadURL, displayName);
+
         setResponse("");
+    } catch (error) {
+        console.error("Error: ", error);
+    }
+        //pdf works, doesnt save properly though. Maybe because of await?
+        // const pdf = new jsPDF("p", "mm", "a4");
+        // const data = document.getElementById("cards");
+        // html2canvas(data, {logging:true, letterRendering:1, useCORS:true}).then((canvas) => {
+        //     const imgWidth = 200;
+        //     const imgHeight = canvas.height * imgWidth/ canvas.width;
+        //     const imgData = canvas.toDataURL("img/png");
+        //     pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+        // })          
+        // const pdfBlob = pdf.output('blob');
+        // const storage = getStorage();
+        // const storageRef = ref(storage, `pdfs/${auth.currentUser.uid}/itinerary-${Date.now()}.pdf`);
+
+        // try {
+        //     await uploadBytes(storageRef, pdfBlob);
+        //     const downloadURL = await getDownloadURL(storageRef);
+        //     await savePdfUrlToFirestore(downloadURL, displayName);
+        // } catch (error) {
+        //     console.error("Error uploading file: ", error);
+        // }
+        // setResponse("");
     }
 
     const [selectedCountry, setSelectedCountry] = useState('');
@@ -260,7 +266,7 @@ function ItineraryGenerator({ dim }) {
 
         useEffect(() => {
             const countrySelect = document.getElementById("country");
-            console.log(countrySelect);
+            //console.log(countrySelect);
             country_list.forEach(country => {
                 const option = document.createElement("option");
                 option.value = country;
@@ -575,7 +581,7 @@ function ItineraryGenerator({ dim }) {
                 </div>
             }
 
-            <div className="cards">
+            <div id= "cards" className="cards">
                 {(display && response == "") ?
                     <div className="loader"></div>
                     : aiOutputFilter(response).map((item, index) => <Card key={index} index={index} input={item} />)
@@ -608,7 +614,6 @@ function ItineraryGenerator({ dim }) {
                         Save Itinerary to Profile
                     </button>
                 </div>}
-
             {/* <div className='results' id='makepdf'></div> */}
             {/* {response != "" && aiOutputFilter(response).map((item) => <Card input={item} />)} */}
         </div>
