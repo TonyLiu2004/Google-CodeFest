@@ -277,7 +277,7 @@ function ItineraryGenerator({ dim }) {
     }
 
     //Idea: save URL pdfs to an array then sequentially add them to the pdf file
-    const updatedSavedItineraries = async () => {
+    const updatedSavedItinerary = async () => {
 
     }
 
