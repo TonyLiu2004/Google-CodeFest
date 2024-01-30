@@ -282,11 +282,6 @@ function ItineraryGenerator({ dim }) {
         setSelectedCountry(event.target.value);
     }
 
-    //Idea: save URL pdfs to an array then sequentially add them to the pdf file
-    const updatedSavedItinerary = async () => {
-
-    }
-
     const savePdfUrlToFirestore = async (pdfUrl) => {
         await addDoc(collection(db, "itineraries"), {
             userId: auth.currentUser.uid,
