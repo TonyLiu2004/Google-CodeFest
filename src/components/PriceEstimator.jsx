@@ -23,8 +23,8 @@ const FlightSearchComponent = () => {
     const [display, setDisplay] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [noResults, setNoResults] = useState(false);
-    const [formattedFlightData, setFormattedFlightData] = useState('');
-    const [response, setResponse] = useState('');
+    //const [formattedFlightData, setFormattedFlightData] = useState('');
+    const [response, setResponse] = useState('TESTING');
 
     const fetchAccessToken = async () => {
         const params = new URLSearchParams();
@@ -57,12 +57,12 @@ const FlightSearchComponent = () => {
             if (response.data.data.length === 0) {
                 setNoResults(true);
             } else {
-                setFlights(response.data.data);
+                //setFlights(response.data.data);
                 const formattedData = formatFlightData(response.data.data);
-                setFormattedFlightData(formattedData);
-                console.log(formattedFlightData);
-                const aiInput = `${formattedFlightData} Convert this into english sentences. It is from an API that returns the details of a flight. Make it straight forward please. No extra just make the data into easy to read english sentences please`
+                //setFormattedFlightData(formattedData);
+                const aiInput = `${formattedData} Convert this into english sentences. It is from an API that returns the details of a flight. Make it straight forward please. No extra just make the data into easy to read english sentences please`
                 await fetchData(aiInput);
+                console.log(formattedData);
             }
         } catch (error) {
             console.error("Error fetching flights", error);
@@ -167,7 +167,7 @@ const FlightSearchComponent = () => {
                         <div>No flights found for the specified criteria. Please try again with different parameters.</div>
                     )}
 
-                    {flights.length > 0 && (
+                    {flights.length >= 0 && (
                         <div>
                             <h2>Flight Results</h2>
                             <p>{response}</p>
