@@ -206,37 +206,37 @@ function ItineraryGenerator({ dim }) {
     const saveItinerary = async () => {
         const pdf = new jsPDF("p", "mm", "a4");
         const data = document.getElementById("cards");
-    try {
-        const canvas = await html2canvas(data, { logging: true, letterRendering: 1, useCORS: true });
-        const imgWidth = 210;
-        const imgHeight = canvas.height * imgWidth / canvas.width;
+        try {
+            const canvas = await html2canvas(data, { logging: true, letterRendering: 1, useCORS: true });
+            const imgWidth = 210;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
 
-        const imgData = canvas.toDataURL("image/png");
-        const totalPages = Math.ceil(imgHeight / pdf.internal.pageSize.getHeight());
-        // Loop through pages
-        for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
-            // Add a new page for each iteration
-            if (pageIndex > 0) {
-                pdf.addPage();
+            const imgData = canvas.toDataURL("image/png");
+            const totalPages = Math.ceil(imgHeight / pdf.internal.pageSize.getHeight());
+            // Loop through pages
+            for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+                // Add a new page for each iteration
+                if (pageIndex > 0) {
+                    pdf.addPage();
+                }
+
+                // Adjust y position based on the pageIndex
+                const adjustedY = - (pageIndex * pdf.internal.pageSize.getHeight());
+
+                pdf.addImage(imgData, "PNG", 0, adjustedY, imgWidth, imgHeight);
             }
+            const pdfBlob = pdf.output('blob');
+            const storage = getStorage();
+            const storageRef = ref(storage, `pdfs/${auth.currentUser.uid}/itinerary-${Date.now()}.pdf`);
 
-            // Adjust y position based on the pageIndex
-            const adjustedY = - (pageIndex * pdf.internal.pageSize.getHeight());
+            await uploadBytes(storageRef, pdfBlob);
+            const downloadURL = await getDownloadURL(storageRef);
+            await savePdfUrlToFirestore(downloadURL, displayName);
 
-            pdf.addImage(imgData, "PNG", 0, adjustedY, imgWidth, imgHeight);
+            setResponse("");
+        } catch (error) {
+            console.error("Error: ", error);
         }
-        const pdfBlob = pdf.output('blob');
-        const storage = getStorage();
-        const storageRef = ref(storage, `pdfs/${auth.currentUser.uid}/itinerary-${Date.now()}.pdf`);
-
-        await uploadBytes(storageRef, pdfBlob);
-        const downloadURL = await getDownloadURL(storageRef);
-        await savePdfUrlToFirestore(downloadURL, displayName);
-
-        setResponse("");
-    } catch (error) {
-        console.error("Error: ", error);
-    }
         //pdf works, doesnt save properly though. Maybe because of await?
         // const pdf = new jsPDF("p", "mm", "a4");
         // const data = document.getElementById("cards");
@@ -298,296 +298,174 @@ function ItineraryGenerator({ dim }) {
 
     return (
         <div>
-            {dim === "Yes" &&
-                <div id="theForm">
-                    <form>
-                        <div id="activitiesTop">
-                            <h3 style={{ marginBottom: "0px" }}>Desired Activities:</h3>
-                            <div style={{ display: "flex" }}>
-                                <h3 style={{ marginBottom: "0px" }}> Other: &nbsp;</h3>
-                                <input type="text" id="otherActivities" value={otherActivities} placeholder="Other Activities" onChange={(event) => setOtherActivities(event.target.value)}></input>
-                            </div>
+            <div id="theForm">
+                <form>
+                    <div id="activitiesTop">
+                        <h3 style={{ marginBottom: "0px" }}>Desired Activities:</h3>
+                        <div style={{ display: "flex" }}>
+                            <h3 style={{ marginBottom: "0px" }}> Other: &nbsp;</h3>
+                            <input type="text" id="otherActivities" value={otherActivities} placeholder="Other Activities" onChange={(event) => setOtherActivities(event.target.value)}></input>
                         </div>
-                        <div id="activitiesform">
-                            <div className="subActivities">
-                                <h4 style={{ marginBottom: "5px" }}>Outdoors</h4>
-                                <label>
-                                    <input type="checkbox" value="Camping" onChange={handleActivity} /> Camping
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Biking" onChange={handleActivity} /> Biking
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Hiking" onChange={handleActivity} /> Hiking
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Swimming" onChange={handleActivity} /> Swimming
-                                </label>
-                            </div>
-                            <div className="subActivities">
-                                <h4 style={{ marginBottom: "5px" }}>Cultural</h4>
-                                <label>
-                                    <input type="checkbox" value="Museums and Art Galleries" onChange={handleActivity} /> Museums/Art
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Historical tours" onChange={handleActivity} /> Historical tours
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Local festivals" onChange={handleActivity} /> Local festivals
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Performing arts" onChange={handleActivity} /> Performing arts
-                                </label>
-                            </div>
-                            <div className="subActivities">
-                                <h4 style={{ marginBottom: "5px" }}>City Exploration</h4>
-                                <label>
-                                    <input type="checkbox" value="City Tours" onChange={handleActivity} /> City Tours
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Shopping" onChange={handleActivity} /> Shopping
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Food" onChange={handleActivity} /> Food
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Urban Parks" onChange={handleActivity} /> Urban Parks
-                                </label>
-                            </div>
-                            <div className="subActivities">
-                                <h4 style={{ marginBottom: "5px" }}>Nature</h4>
-                                <label>
-                                    <input type="checkbox" value="Safari Tours" onChange={handleActivity} /> Safari Tours
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Bird Watching" onChange={handleActivity} /> Bird Watching
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Nature Reserves" onChange={handleActivity} /> Nature Reserves
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Sightseeing" onChange={handleActivity} /> Sightseeing
-                                </label>
-                            </div>
-                            <div className="subActivities">
-                                <h4 style={{ marginBottom: "5px" }}>Family</h4>
-                                <label>
-                                    <input type="checkbox" value="Amusement Parks" onChange={handleActivity} /> Amusement Parks
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Zoos and Aquariums" onChange={handleActivity} /> Zoos and Aquariums
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Beach" onChange={handleActivity} /> Beach
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Cruise" onChange={handleActivity} /> Cruise
-                                </label>
-                            </div>
+                    </div>
+                    <div id="activitiesform">
+                        <div className="subActivities">
+                            <h4 style={{ marginBottom: "5px" }}>Outdoors</h4>
+                            <label>
+                                <input type="checkbox" value="Camping" onChange={handleActivity} /> Camping
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Biking" onChange={handleActivity} /> Biking
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Hiking" onChange={handleActivity} /> Hiking
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Swimming" onChange={handleActivity} /> Swimming
+                            </label>
                         </div>
-                    </form>
+                        <div className="subActivities">
+                            <h4 style={{ marginBottom: "5px" }}>Cultural</h4>
+                            <label>
+                                <input type="checkbox" value="Museums and Art Galleries" onChange={handleActivity} /> Museums/Art
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Historical tours" onChange={handleActivity} /> Historical tours
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Local festivals" onChange={handleActivity} /> Local festivals
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Performing arts" onChange={handleActivity} /> Performing arts
+                            </label>
+                        </div>
+                        <div className="subActivities">
+                            <h4 style={{ marginBottom: "5px" }}>City Exploration</h4>
+                            <label>
+                                <input type="checkbox" value="City Tours" onChange={handleActivity} /> City Tours
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Shopping" onChange={handleActivity} /> Shopping
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Food" onChange={handleActivity} /> Food
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Urban Parks" onChange={handleActivity} /> Urban Parks
+                            </label>
+                        </div>
+                        <div className="subActivities">
+                            <h4 style={{ marginBottom: "5px" }}>Nature</h4>
+                            <label>
+                                <input type="checkbox" value="Safari Tours" onChange={handleActivity} /> Safari Tours
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Bird Watching" onChange={handleActivity} /> Bird Watching
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Nature Reserves" onChange={handleActivity} /> Nature Reserves
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Sightseeing" onChange={handleActivity} /> Sightseeing
+                            </label>
+                        </div>
+                        <div className="subActivities">
+                            <h4 style={{ marginBottom: "5px" }}>Family</h4>
+                            <label>
+                                <input type="checkbox" value="Amusement Parks" onChange={handleActivity} /> Amusement Parks
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Zoos and Aquariums" onChange={handleActivity} /> Zoos and Aquariums
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Beach" onChange={handleActivity} /> Beach
+                            </label>
+                            <label>
+                                <input type="checkbox" value="Cruise" onChange={handleActivity} /> Cruise
+                            </label>
+                        </div>
+                    </div>
+                </form>
+
+                <hr /><br />
+
+                {dim === "Yes" &&
                     <div>
                         <>
                             <label htmlFor="country">Country Name: &nbsp;</label>
                             <select id="country" onChange={CountryHandleChange}></select>
                             <br /><br />
                         </>
-                        <label htmlFor="style">Overall Style: &nbsp;</label>
-                        <select style={{ fontSize: "14px" }} name="style" id="style" form="styleform" onChange={() => setStyle(document.getElementById("style").value)}>
-                            <option value="">No Preference</option>
-                            <option value="Adventurous">Adventurous</option>
-                            <option value="Relaxed">Relaxed</option>
-                            <option value="Cultural">Cultural</option>
-                            <option value="Urban">Urban</option>
-                            <option value="Family">Family</option>
-                        </select>
-                        <br /><br />
-                        <label htmlFor="days">Number of Days: &nbsp;</label>
-                        <input
-                            type="number"
-                            id="days"
-                            value={duration}
-                            onChange={(event) => setDuration(Math.max(1, parseInt(event.target.value, 10)))}
-                            min="1"
-                        />
-                        <br /><br />
-
-                        <label htmlFor="groupSize">Group Size: &nbsp;</label>
-                        <input
-                            type="number"
-                            id="groupSize"
-                            value={group}
-                            onChange={(event) => setGroup(Math.max(1, parseInt(event.target.value, 10)))}
-                            min="1"
-                        />
-                        <br /><br />
-
-                        <label htmlFor="budget">Budget (USD): &nbsp;</label>
-                        <input
-                            type="number"
-                            id="budget"
-                            placeholder="Enter your budget in USD"
-                            value={budget}
-                            onChange={(event) => setBudget(Math.max(0, parseInt(event.target.value, 10)))}
-                        />
-                        <br /><br /><hr /><br />
-                        <button style={{ display: "block", margin: "0 auto" }} onClick={handleSubmitNDIM}> Generate Itinerary </button>
-                        <br />
                     </div>
-                </div>
-            }
-            {dim === "No" &&
-                <div id="theForm">
-                    <form>
-                        <div id="activitiesTop">
-                            <h3 style={{ marginBottom: "0px" }}>Desired Activities:</h3>
-                            <div style={{ display: "flex" }}>
-                                <h3 style={{ marginBottom: "0px" }}> Other: &nbsp;</h3>
-                                <input type="text" id="otherActivities" value={otherActivities} placeholder="Other Activities" onChange={(event) => setOtherActivities(event.target.value)}></input>
-                            </div>
+                }
+
+                {dim === "No" &&
+                    <div>
+                        <div>
+                            <label htmlFor="climate">Climate: &nbsp;</label>
+                            <select style={{ fontSize: "14px" }} name="climate" id="climate" form="climateform" onChange={() => setClimate(document.getElementById("climate").value)}>
+                                <option value="">No Preference</option>
+                                <option value="Tropical">Tropical</option>
+                                <option value="Dry">Dry</option>
+                                <option value="Temperate">Temperate</option>
+                                <option value="Continental">Continental</option>
+                                <option value="Polar">Polar</option>
+                            </select>
+                            <br /><br />
                         </div>
-                        <div id="activitiesform">
-                            <div className="subActivities">
-                                <h4 style={{ marginBottom: "5px" }}>Outdoors</h4>
-                                <label>
-                                    <input type="checkbox" value="Camping" onChange={handleActivity} /> Camping
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Biking" onChange={handleActivity} /> Biking
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Hiking" onChange={handleActivity} /> Hiking
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Swimming" onChange={handleActivity} /> Swimming
-                                </label>
-                            </div>
-                            <div className="subActivities">
-                                <h4 style={{ marginBottom: "5px" }}>Cultural</h4>
-                                <label>
-                                    <input type="checkbox" value="Museums and Art Galleries" onChange={handleActivity} /> Museums/Art
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Historical tours" onChange={handleActivity} /> Historical tours
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Local festivals" onChange={handleActivity} /> Local festivals
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Performing arts" onChange={handleActivity} /> Performing arts
-                                </label>
-                            </div>
-                            <div className="subActivities">
-                                <h4 style={{ marginBottom: "5px" }}>City Exploration</h4>
-                                <label>
-                                    <input type="checkbox" value="City Tours" onChange={handleActivity} /> City Tours
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Shopping" onChange={handleActivity} /> Shopping
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Food" onChange={handleActivity} /> Food
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Urban Parks" onChange={handleActivity} /> Urban Parks
-                                </label>
-                            </div>
-                            <div className="subActivities">
-                                <h4 style={{ marginBottom: "5px" }}>Nature</h4>
-                                <label>
-                                    <input type="checkbox" value="Safari Tours" onChange={handleActivity} /> Safari Tours
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Bird Watching" onChange={handleActivity} /> Bird Watching
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Nature Reserves" onChange={handleActivity} /> Nature Reserves
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Sightseeing" onChange={handleActivity} /> Sightseeing
-                                </label>
-                            </div>
-                            <div className="subActivities">
-                                <h4 style={{ marginBottom: "5px" }}>Family</h4>
-                                <label>
-                                    <input type="checkbox" value="Amusement Parks" onChange={handleActivity} /> Amusement Parks
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Zoos and Aquariums" onChange={handleActivity} /> Zoos and Aquariums
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Beach" onChange={handleActivity} /> Beach
-                                </label>
-                                <label>
-                                    <input type="checkbox" value="Cruise" onChange={handleActivity} /> Cruise
-                                </label>
-                            </div>
-                        </div>
-                    </form>
+                    </div>}
 
-                    <hr /><br />
-                    <label htmlFor="climate">Climate: &nbsp;</label>
-                    <select style={{ fontSize: "14px" }} name="climate" id="climate" form="climateform" onChange={() => setClimate(document.getElementById("climate").value)}>
-                        <option value="">No Preference</option>
-                        <option value="Tropical">Tropical</option>
-                        <option value="Dry">Dry</option>
-                        <option value="Temperate">Temperate</option>
-                        <option value="Continental">Continental</option>
-                        <option value="Polar">Polar</option>
-                    </select>
-                    <br /><br />
+                <label htmlFor="style">Overall Style: &nbsp;</label>
+                <select style={{ fontSize: "14px" }} name="style" id="style" form="styleform" onChange={() => setStyle(document.getElementById("style").value)}>
+                    <option value="">No Preference</option>
+                    <option value="Adventurous">Adventurous</option>
+                    <option value="Relaxed">Relaxed</option>
+                    <option value="Cultural">Cultural</option>
+                    <option value="Urban">Urban</option>
+                    <option value="Family">Family</option>
+                </select>
+                <br /><br />
+                <label htmlFor="days">Number of Days: &nbsp;</label>
+                <input
+                    type="number"
+                    id="days"
+                    value={duration}
+                    onChange={(event) => setDuration(Math.max(1, parseInt(event.target.value, 10)))}
+                    min="1"
+                />
+                <br /><br />
 
-                    <label htmlFor="style">Overall Style: &nbsp;</label>
-                    <select style={{ fontSize: "14px" }} name="style" id="style" form="styleform" onChange={() => setStyle(document.getElementById("style").value)}>
-                        <option value="">No Preference</option>
-                        <option value="Adventurous">Adventurous</option>
-                        <option value="Relaxed">Relaxed</option>
-                        <option value="Cultural">Cultural</option>
-                        <option value="Urban">Urban</option>
-                        <option value="Family">Family</option>
-                    </select>
-                    <br /><br />
-                    <label htmlFor="days">Number of Days: &nbsp;</label>
-                    <input
-                        type="number"
-                        id="days"
-                        value={duration}
-                        onChange={(event) => setDuration(Math.max(1, parseInt(event.target.value, 10)))}
-                        min="1"
-                    />
-                    <br /><br />
+                <label htmlFor="groupSize">Group Size: &nbsp;</label>
+                <input
+                    type="number"
+                    id="groupSize"
+                    value={group}
+                    onChange={(event) => setGroup(Math.max(1, parseInt(event.target.value, 10)))}
+                    min="1"
+                />
+                <br /><br />
 
-                    <label htmlFor="groupSize">Group Size: &nbsp;</label>
-                    <input
-                        type="number"
-                        id="groupSize"
-                        value={group}
-                        onChange={(event) => setGroup(Math.max(1, parseInt(event.target.value, 10)))}
-                        min="1"
-                    />
-                    <br /><br />
+                <label htmlFor="budget">Budget (USD): &nbsp;</label>
+                <input
+                    type="number"
+                    id="budget"
+                    placeholder="Enter your budget in USD"
+                    value={budget}
+                    onChange={(event) => setBudget(Math.max(0, parseInt(event.target.value, 10)))}
+                />
+                <br /><br /><hr /><br />
+                <button style={{ display: "block", margin: "0 auto" }} onClick={handleSubmitNDIM}> Generate Itinerary </button>
+                <br />
+            </div>
 
-                    <label htmlFor="budget">Budget (USD): &nbsp;</label>
-                    <input
-                        type="number"
-                        id="budget"
-                        placeholder="Enter your budget in USD"
-                        value={budget}
-                        onChange={(event) => setBudget(Math.max(0, parseInt(event.target.value, 10)))}
-                    />
-                    <br /><br /><hr /><br />
-                    <button style={{ display: "block", margin: "0 auto" }} onClick={handleSubmitNDIM}> Generate Itinerary </button>
-                    <br />
-                </div>
-            }
-
-            <div id= "cards" className="cards">
+            <div id="cards" className="cards">
                 {(display && response == "") ?
                     <div className="loader"></div>
                     : aiOutputFilter(response).map((item, index) => <Card key={index} index={index} input={item} />)
                 }
             </div>
             <br />
+
+
 
             {display && <div>
                 <button id="pdfButton" onClick={makePDF}>Generate PDF</button>
@@ -614,6 +492,9 @@ function ItineraryGenerator({ dim }) {
                         Save Itinerary to Profile
                     </button>
                 </div>}
+
+
+
             {/* <div className='results' id='makepdf'></div> */}
             {/* {response != "" && aiOutputFilter(response).map((item) => <Card input={item} />)} */}
         </div>
