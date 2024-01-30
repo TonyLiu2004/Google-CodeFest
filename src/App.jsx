@@ -10,7 +10,7 @@ import Home from './routes/Home';
 import About from './routes/About';
 import Travel from './routes/Travel';
 import Saved from './routes/Saved';
-import FlightSearchComponent from './components/PriceEstimator';
+import FlightSearchComponent from './routes/PriceEstimator';
 
 function App() {
   return (

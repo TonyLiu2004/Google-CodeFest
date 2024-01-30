@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import './PriceEstimator.css';
 import axios from 'axios';
 
 const API_URL = "https://test.api.amadeus.com/v2/shopping/flight-offers";
@@ -120,7 +121,7 @@ const FlightSearchComponent = () => {
     return (
         <div>
             {isLoading ? (
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>Loading...</div>
+                <div className="loader"></div>
             ) : (
                 <>
                     {display && (
