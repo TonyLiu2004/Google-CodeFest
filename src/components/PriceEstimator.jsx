@@ -22,7 +22,7 @@ const FlightSearchComponent = () => {
     const [flights, setFlights] = useState([]);
     const [display, setDisplay] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const [noResults, setNoResults] = useState(false);
+    const [noResults, setNoResults] = useState(null);
     //const [formattedFlightData, setFormattedFlightData] = useState('');
     const [response, setResponse] = useState('TESTING');
 
@@ -163,11 +163,11 @@ const FlightSearchComponent = () => {
                         </div>
                     )}
 
-                    {noResults && (
+                    {noResults == true && (
                         <div>No flights found for the specified criteria. Please try again with different parameters.</div>
                     )}
 
-                    {flights.length >= 0 && (
+                    {noResults == false && (
                         <div>
                             <h2>Flight Results</h2>
                             <p>{response}</p>
