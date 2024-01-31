@@ -61,9 +61,9 @@ const FlightSearchComponent = () => {
                 //setFlights(response.data.data);
                 const formattedData = formatFlightData(response.data.data);
                 //setFormattedFlightData(formattedData);
-                const aiInput = `${formattedData} Convert this into english sentences. It is from an API that returns the details of a flight. Make it straight forward please. No extra just make the data into easy to read english sentences please`
+                const aiInput = `${formattedData} Convert this into english sentences. It is from an API that returns the details of a flight. Make it straight forward please. No extra just make the data into easy to read english sentences please. The data provided includes departure and arrival times both ways, duration, stops, and price. Make sure to separate the data into different sentences and lines.`
                 await fetchData(aiInput);
-                console.log(formattedData);
+                //console.log(formattedData);
             }
         } catch (error) {
             console.error("Error fetching flights", error);
@@ -109,15 +109,24 @@ const FlightSearchComponent = () => {
 
             const response = results.response;
 
-            const text = response.text();
+            const text = response.text() + "*";
 
-            setResponse(text);
+            const matches = text.match(/\*([^*]+)\*/g).map(item => item.trim().slice(1, -1).trim());
+
+            setResponse(matches);
         }
         catch (error) {
             setResponse("ERROR, try again");
             console.log("ERROR: ", error);
         }
     }
+
+    const listStyle = {
+        listStyleType: 'none', // This removes the bullet points
+        padding: 0, // This removes the default padding
+        margin: 0 // This removes the default margin
+    };
+
     return (
         <div>
             {isLoading ? (
@@ -168,12 +177,24 @@ const FlightSearchComponent = () => {
                         <div>No flights found for the specified criteria. Please try again with different parameters.</div>
                     )}
 
-                    {noResults == false && (
+                    {noResults == false &&
                         <div>
                             <h2>Flight Results</h2>
-                            <p>{response}</p>
-                        </div>
-                    )}
+
+                            <ul style={listStyle}>
+                                {response.map((item, index) => (
+                                    <li>{item}</li>
+                                ))}
+                            </ul>
+                            {/* 
+                            <ol>
+                                {response.map((item, index) => (
+                                    <li key={index}>{item}</li>
+                                ))}
+                            </ol>
+ */}
+
+                        </div>}
                 </>
             )}
         </div>
