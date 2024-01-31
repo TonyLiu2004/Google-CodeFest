@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { db, auth } from '../firebaseConfig';
 import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
-import './Saved.css';
 
 function Saved() {
     const [itineraries, setItineraries] = useState([]);
@@ -41,20 +40,27 @@ function Saved() {
     return (
         <div>
             {itineraries.length > 0 ? (
-                <div className="itinerary-binder">
+                <ul>
                     {itineraries.map((item, index) => (
-                        <div className="itinerary-card" key={index}>
+                        <li key={index}>
                             <a href={item.pdfUrl} target="_blank" rel="noopener noreferrer">{item.displayName}</a>
+
+                            <br />
+
                             <iframe
                                 src={item.pdfUrl}
-                                width="100%"
-                                height="100%"
+                                width="300"
+                                height="400"
                                 title={item.displayName}
                             ></iframe>
+
+                            <br />
+
                             <button onClick={() => deleteItinerary(item.id)}>Delete</button>
-                        </div>
+
+                        </li>
                     ))}
-                </div>
+                </ul>
             ) : (
                 <div>
                     <h1> No saved itineraries </h1>
