@@ -244,14 +244,6 @@ const FlightSearchComponent = () => {
                                     </li>
                                 ))}
                             </ul>
-                            {/* 
-                            <ol>
-                                {response.map((item, index) => (
-                                    <li key={index}>{item}</li>
-                                ))}
-                            </ol>
- */}
-
                         </div>}
                 </>
             )}
