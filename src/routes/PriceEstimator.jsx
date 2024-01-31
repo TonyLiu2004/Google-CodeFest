@@ -20,7 +20,7 @@ const FlightSearchComponent = () => {
     const [departureDate, setDepartureDate] = useState('');
     const [returnDate, setReturnDate] = useState('');
     const [flightClass, setFlightClass] = useState('ECONOMY');
-    const [flights, setFlights] = useState([]);
+    //const [flights, setFlights] = useState([]);
     const [display, setDisplay] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [noResults, setNoResults] = useState(null);
