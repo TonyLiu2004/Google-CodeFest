@@ -9,3 +9,43 @@
     animation: spin 2s linear infinite;
     margin: 0 auto;
 }
+
+.form-group {
+    margin-bottom: 10px;
+    /* Adjust the space between form groups */
+}
+
+.form-label {
+    display: block;
+    /* Makes the label take up the full width */
+    margin-bottom: 5px;
+    /* Space between the label and the input */
+    font-weight: bold;
+    /* Optional: makes the label text bold */
+}
+
+.form-input {
+    width: 100%;
+    /* Makes the input take up the full width of its container */
+    padding: 8px;
+    /* Adds some padding inside the input */
+    margin-bottom: 5px;
+    /* Space after the input */
+    box-sizing: border-box;
+    /* Ensures padding doesn't affect the overall width */
+}
+
+.submit-button {
+    background-color: #4CAF50;
+    /* Example button color, change as needed */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #45a049;
+    /* Darker shade for hover effect */
+}

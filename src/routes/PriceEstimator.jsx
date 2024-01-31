@@ -135,43 +135,98 @@ const FlightSearchComponent = () => {
                 <>
                     {display && (
                         <div>
-                            <form onSubmit={handleSearch}>
-                                <input type="text" value={origin} onChange={(e) => setOrigin(e.target.value)} placeholder="Origin" />
-                                <br />
-                                <input type="text" value={destination} onChange={(e) => setDestination(e.target.value)} placeholder="Destination" />
-                                <br />
-                                <label>
-                                    Adults:
-                                    <input type="number" value={adults} onChange={(e) => setAdults(e.target.value)} placeholder="Adults" />
-                                </label>
-                                <br />
-                                <label>
-                                    Children:
-                                    <input type="number" value={children} onChange={(e) => setChildren(e.target.value)} placeholder="Children" />
-                                </label>
-                                <br />
-                                <label>
-                                    Infants:
-                                    <input type="number" value={infants} onChange={(e) => setInfants(e.target.value)} placeholder="Infants" />
-                                </label>
-                                <br />
-                                <label>
-                                    Non-stop flight?
+                            <form onSubmit={handleSearch} className="flight-search-form">
+                                <div className="form-group">
+                                    <label className="form-label">Origin (IATA Code):</label>
                                     <input
-                                        type="checkbox"
-                                        checked={nonStop}
-                                        onChange={(e) => setNonStop(e.target.checked)}
+                                        className="form-input"
+                                        type="text"
+                                        value={origin}
+                                        onChange={(e) => setOrigin(e.target.value)}
+                                        placeholder="Origin (IATA Code)"
                                     />
-                                </label>
-                                <br />
-                                <input type="date" value={departureDate} onChange={(e) => setDepartureDate(e.target.value)} />
-                                <br />
-                                <input type="date" value={returnDate} onChange={(e) => setReturnDate(e.target.value)} />
-                                <br />
-                                <button type="submit">Search Flights</button>
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="form-label">Destination (IATA Code):</label>
+                                    <input
+                                        className="form-input"
+                                        type="text"
+                                        value={destination}
+                                        onChange={(e) => setDestination(e.target.value)}
+                                        placeholder="Destination (IATA Code)"
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="form-label">Adults:</label>
+                                    <input
+                                        className="form-input"
+                                        type="number"
+                                        value={adults}
+                                        onChange={(e) => setAdults(e.target.value)}
+                                        placeholder="Adults"
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="form-label">Children:</label>
+                                    <input
+                                        className="form-input"
+                                        type="number"
+                                        value={children}
+                                        onChange={(e) => setChildren(e.target.value)}
+                                        placeholder="Children"
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="form-label">Infants:</label>
+                                    <input
+                                        className="form-input"
+                                        type="number"
+                                        value={infants}
+                                        onChange={(e) => setInfants(e.target.value)}
+                                        placeholder="Infants"
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="form-label">
+                                        Non-stop flight?
+                                        <input
+                                            type="checkbox"
+                                            checked={nonStop}
+                                            onChange={(e) => setNonStop(e.target.checked)}
+                                        />
+                                    </label>
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="form-label">Departure Date:</label>
+                                    <input
+                                        className="form-input"
+                                        type="date"
+                                        value={departureDate}
+                                        onChange={(e) => setDepartureDate(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="form-label">Return Date:</label>
+                                    <input
+                                        className="form-input"
+                                        type="date"
+                                        value={returnDate}
+                                        onChange={(e) => setReturnDate(e.target.value)}
+                                    />
+                                </div>
+
+                                <button className="submit-button" type="submit">Search Flights</button>
                             </form>
                         </div>
                     )}
+
 
                     {noResults == true && (
                         <div>No flights found for the specified criteria. Please try again with different parameters.</div>
@@ -183,7 +238,10 @@ const FlightSearchComponent = () => {
 
                             <ul style={listStyle}>
                                 {response.map((item, index) => (
-                                    <li>{item}</li>
+                                    <li>
+                                        {item}
+                                        <hr />
+                                    </li>
                                 ))}
                             </ul>
                             {/* 
