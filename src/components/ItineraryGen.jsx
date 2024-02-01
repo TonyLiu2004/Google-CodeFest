@@ -147,7 +147,7 @@ function ItineraryGenerator({ dim }) {
                 textContent = data.response.candidates[0].content.parts[0].text;
                 console.log("Extracted Text: ", textContent);
 
-                const filteredOutput = aiOutputFilter(textContent);
+                const filteredOutput = aiOutputFilter(textContent).filter(item => item.length != 0);
                 console.log("Filtered Output: ", filteredOutput);
 
                 setResponse(filteredOutput.join('\n'));
@@ -529,11 +529,6 @@ function ItineraryGenerator({ dim }) {
                         Save Itinerary to Profile
                     </button>
                 </div>}
-
-
-
-            {/* <div className='results' id='makepdf'></div> */}
-            {/* {response != "" && aiOutputFilter(response).map((item) => <Card input={item} />)} */}
         </div>
     )
 }

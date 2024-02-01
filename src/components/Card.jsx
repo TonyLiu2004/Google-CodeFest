@@ -11,7 +11,8 @@ const Card = ({input, index }) => {
       );
       
     useEffect(() => {
-        //client.photos.search({ input, per_page: 1 }).then(photos => console.log(photos));
+        if (input === "") return;
+
         const fetchData = async () => {
             try {
                 const response = await fetch(`https://api.pexels.com/v1/search?per_page=1&query=${input}`, {
@@ -23,9 +24,7 @@ const Card = ({input, index }) => {
                 if (!response.ok) {
                     alert('Network response was not ok');
                 }
-
                 const data = await response.json();
-                //console.log(data);
                 setImg(data.photos[0].src.original);
 
             } catch (error) {
