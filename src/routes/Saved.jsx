@@ -39,6 +39,7 @@ function Saved() {
 
     return (
         <div>
+            <br/>
             {itineraries.length > 0 ? (
                 <ul>
                     {itineraries.map((item, index) => (

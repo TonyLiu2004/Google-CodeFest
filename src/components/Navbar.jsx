@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-
+import "./Navbar.css";
 function Navbar() {
     const [userAuth, setUserAuth] = useState(
         <>
@@ -28,7 +28,7 @@ function Navbar() {
         }
     }, [])
     return (
-        <nav>
+        <nav className ="nav-container" style={{padding:"12px"}}> 
             <div className="nav-links">
                 <Link to="/" className="nav-link">Home</Link>
                 <Link to="/about" className="nav-link">Mission</Link>
