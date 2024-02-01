@@ -245,7 +245,9 @@ function ItineraryGenerator({ dim }) {
         setDisplayName(event.target.value);
     }
 
+    const [loaderIteniery, setLoaderItinerary] = useState(false);
     const saveItinerary = async () => {
+        setLoaderItinerary(true);
         const pdf = new jsPDF("p", "mm", "a4");
         const data = document.getElementById("cards");
         try {
@@ -274,32 +276,11 @@ function ItineraryGenerator({ dim }) {
             await uploadBytes(storageRef, pdfBlob);
             const downloadURL = await getDownloadURL(storageRef);
             await savePdfUrlToFirestore(downloadURL, displayName);
-
-            setResponse("");
+            setLoaderItinerary(false);
+            alert("Itinerary saved!");
         } catch (error) {
             console.error("Error: ", error);
         }
-        //pdf works, doesnt save properly though. Maybe because of await?
-        // const pdf = new jsPDF("p", "mm", "a4");
-        // const data = document.getElementById("cards");
-        // html2canvas(data, {logging:true, letterRendering:1, useCORS:true}).then((canvas) => {
-        //     const imgWidth = 200;
-        //     const imgHeight = canvas.height * imgWidth/ canvas.width;
-        //     const imgData = canvas.toDataURL("img/png");
-        //     pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-        // })          
-        // const pdfBlob = pdf.output('blob');
-        // const storage = getStorage();
-        // const storageRef = ref(storage, `pdfs/${auth.currentUser.uid}/itinerary-${Date.now()}.pdf`);
-
-        // try {
-        //     await uploadBytes(storageRef, pdfBlob);
-        //     const downloadURL = await getDownloadURL(storageRef);
-        //     await savePdfUrlToFirestore(downloadURL, displayName);
-        // } catch (error) {
-        //     console.error("Error uploading file: ", error);
-        // }
-        // setResponse("");
     }
 
     const [selectedCountry, setSelectedCountry] = useState('');
@@ -523,6 +504,7 @@ function ItineraryGenerator({ dim }) {
                     <br />
                     <br />
 
+                    {loaderIteniery && <><div className="loader"></div><br/></>}
                     <button onClick={saveItinerary}
                         disabled={!displayName.trim()}
                     >
