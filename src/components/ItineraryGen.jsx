@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import '../routes/Travel.css'
 import React from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+//import { GoogleGenerativeAI } from '@google/generative-ai';
 import { db, auth } from '../firebaseConfig.js';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -122,6 +122,48 @@ function ItineraryGenerator({ dim }) {
         return ret;
     }
 
+
+    async function fetchData(query) {
+        try {
+            const response = await fetch('http://localhost:3005/api/generateContent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log("Full RESPONSE: ", data);
+
+            let textContent = '';
+            if (data && data.response && data.response.candidates && data.response.candidates.length > 0 &&
+                data.response.candidates[0].content && data.response.candidates[0].content.parts &&
+                data.response.candidates[0].content.parts.length > 0 && data.response.candidates[0].content.parts[0].text) {
+                textContent = data.response.candidates[0].content.parts[0].text;
+                console.log("Extracted Text: ", textContent);
+
+                const filteredOutput = aiOutputFilter(textContent);
+                console.log("Filtered Output: ", filteredOutput);
+
+                setResponse(filteredOutput.join('\n'));
+            } else {
+                console.error("Invalid or missing text content in response", data);
+                setResponse("ERROR, unexpected response format");
+            }
+        } catch (error) {
+            console.error("ERROR: ", error);
+            setResponse("ERROR, try again");
+        }
+    }
+
+
+
+    /* 
     async function fetchData(query) {
         try {
             const genAI = new GoogleGenerativeAI(API_KEY);
@@ -139,7 +181,7 @@ function ItineraryGenerator({ dim }) {
             console.log("ERROR: ", error);
         }
     }
-
+ */
     // if (response != "") {
     //     let t = aiOutputFilter(response);
     //     let selected_div = document.querySelector('.results');
