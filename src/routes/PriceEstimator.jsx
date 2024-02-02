@@ -34,9 +34,11 @@ const FlightSearchComponent = () => {
             const tokenResponse = await fetchAccessToken();
             const token = tokenResponse;
 
+            console.log(origin, destination, departureDate, returnDate, adults, children, infants, flightClass, nonStop)
+
             const queryParams = new URLSearchParams({
-                //originLocationCode: origin,
-                //destinationLocationCode: destination,
+                origin: origin,
+                destination: destination,
                 departureDate: departureDate,
                 returnDate: returnDate,
                 adults: adults,
@@ -104,6 +106,20 @@ const FlightSearchComponent = () => {
                                 </div>
 
                                 <div className="form-group">
+                                    <label className="form-label">Flight Class:</label>
+                                    <select
+                                        className="form-input"
+                                        value={flightClass}
+                                        onChange={(e) => setFlightClass(e.target.value)}
+                                    >
+                                        <option value="ECONOMY">Economy</option>
+                                        <option value="PREMIUM_ECONOMY">Premium Economy</option>
+                                        <option value="BUSINESS">Business</option>
+                                        <option value="FIRST">First</option>
+                                    </select>
+                                </div>
+
+                                <div className="form-group">
                                     <label className="form-label">Adults:</label>
                                     <input
                                         className="form-input"
@@ -137,17 +153,6 @@ const FlightSearchComponent = () => {
                                 </div>
 
                                 <div className="form-group">
-                                    <label className="form-label">
-                                        Non-stop flight?
-                                        <input
-                                            type="checkbox"
-                                            checked={nonStop}
-                                            onChange={(e) => setNonStop(e.target.checked)}
-                                        />
-                                    </label>
-                                </div>
-
-                                <div className="form-group">
                                     <label className="form-label">Departure Date:</label>
                                     <input
                                         className="form-input"
@@ -165,6 +170,17 @@ const FlightSearchComponent = () => {
                                         value={returnDate}
                                         onChange={(e) => setReturnDate(e.target.value)}
                                     />
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="form-label">
+                                        Non-stop flight?
+                                        <input
+                                            type="checkbox"
+                                            checked={nonStop}
+                                            onChange={(e) => setNonStop(e.target.checked)}
+                                        />
+                                    </label>
                                 </div>
 
                                 <button className="submit-button" type="submit">Search Flights</button>
