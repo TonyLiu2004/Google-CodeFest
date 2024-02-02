@@ -195,47 +195,42 @@ function ItineraryGenerator({ dim }) {
     //     //setResponse("");
     // }
     const makePDF = () => {
-
-        let pdfButton = document.getElementById("pdfButton");
-        //let makepdf = document.getElementById("makepdf");
-        let mywindow = window.open("", "PRINT",
-            "height=400,width=600");
-
         const cardContainer = document.createElement('div');
         cardContainer.innerHTML = document.getElementsByClassName("cards")[0].innerHTML;
-
         const modifiedHTML = cardContainer.innerHTML
             .replace(/<p id="card-text"/g, '<p style="white-space: pre-wrap; text-align: left; margin-right:30px; margin-left:10px; " id="card-text"')
             .replace(/<div class="card"/g, '<div style="display: flex; justify-content: space-between; border: 1px solid black; border-radius: 4px; background-color: rgba(56, 56, 56, 0.611); margin-bottom:10px"')
             .replace(/<img[^>]*src="([^"]*)"[^>]*>/g, '<img style="width: 35%; height: auto; max-width: 400px; max-height: 400px;" src="$1" />');
-
-        // console.log("CARD INFO:");
-        // console.log(modifiedHTML);
+    
+        let mywindow = window.open("", "PRINT", "height=400,width=600");
         mywindow.document.write(`
-    <html>
-      <head>
-        <style>
-          .bordered-container {
-            border: 1px solid #000; 
-            border-radius: 5px;
-            padding: 10px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="bordered-container">
-            ${modifiedHTML}
-        </div>
-      </body>
-    </html>
-  `);
+            <html>
+            <head>
+                <style>
+                .bordered-container {
+                    border: 1px solid #000; 
+                    border-radius: 5px;
+                    padding: 10px;
+                }
+                </style>
+            </head>
+            <body>
+                <div class="bordered-container">
+                    ${modifiedHTML}
+                </div>
+            </body>
+            </html>
+        `);
 
         mywindow.document.close();
         mywindow.focus();
+        let totalImages = cardContainer.querySelectorAll('img').length;
 
-        mywindow.print();
-        mywindow.close();
-
+        setTimeout(() => {
+            mywindow.print();
+            mywindow.close();
+        }, totalImages * 100); 
+    
         return modifiedHTML;
     }
 
