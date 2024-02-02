@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { auth } from '../firebaseConfig';
-import { signInWithEmailAndPassword} from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
 function SignIn() {
@@ -11,7 +11,7 @@ function SignIn() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         signInWithEmailAndPassword(auth, email, password).then((user) => {
-            console.log(user); //signed in successfully
+            console.log(user);
             sessionStorage.setItem("accessToken", user.user.auth.lastNotifiedUid);
             navigate('/');
             location.reload();
@@ -24,7 +24,7 @@ function SignIn() {
 
     return (
         <div>
-        <h1> Sign In </h1>
+            <h1> Sign In </h1>
             <form>
                 <input
                     type="email"
