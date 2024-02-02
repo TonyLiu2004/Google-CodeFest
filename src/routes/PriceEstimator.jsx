@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import './PriceEstimator.css';
 import axios from 'axios';
 
-const API_URL = "https://test.api.amadeus.com/v2/shopping/flight-offers";
-const TOKEN_URL = 'https://test.api.amadeus.com/v1/security/oauth2/token';
-
-const amadeusApiKey = import.meta.env.VITE_AMADEUS_API_KEY;
-const amadeusApiSecret = import.meta.env.VITE_AMADEUS_API_SECRET;
-const geminiApiKey = import.meta.env.VITE_APP_API_KEY;
+const BACKEND_URL = import.meta.env.VITE_SERVER_URL;
 
 const FlightSearchComponent = () => {
     const [origin, setOrigin] = useState('');
@@ -20,25 +14,13 @@ const FlightSearchComponent = () => {
     const [departureDate, setDepartureDate] = useState('');
     const [returnDate, setReturnDate] = useState('');
     const [flightClass, setFlightClass] = useState('ECONOMY');
-    //const [flights, setFlights] = useState([]);
-    const [display, setDisplay] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
-    const [noResults, setNoResults] = useState(null);
-    //const [formattedFlightData, setFormattedFlightData] = useState('');
-    const [response, setResponse] = useState('TESTING');
+    const [flights, setFlights] = useState([]);
+    const [display, setDisplay] = useState(true);
 
     const fetchAccessToken = async () => {
-        const params = new URLSearchParams();
-        params.append('grant_type', 'client_credentials');
-        params.append('client_id', amadeusApiKey);
-        params.append('client_secret', amadeusApiSecret);
-
         try {
-            const response = await axios.post(TOKEN_URL, params, {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            });
+            const response = await axios.post(`${BACKEND_URL}/token`);
             return response.data.access_token;
         } catch (error) {
             console.error('Error getting access token:', error);
@@ -46,85 +28,48 @@ const FlightSearchComponent = () => {
         }
     };
 
-    const getCheapestFlights = async (token) => {
+    const getCheapestFlights = async () => {
         setIsLoading(true);
-        setNoResults(false);
         try {
-            const response = await axios.get(`${API_URL}?originLocationCode=${origin}&destinationLocationCode=${destination}&departureDate=${departureDate}&returnDate=${returnDate}&adults=${adults}&children=${children}&infants=${infants}&travelClass=${flightClass}&nonStop=${nonStop}&currencyCode=USD&max=1`, {
+            const tokenResponse = await fetchAccessToken();
+            const token = tokenResponse;
+
+            const queryParams = new URLSearchParams({
+                //originLocationCode: origin,
+                //destinationLocationCode: destination,
+                departureDate: departureDate,
+                returnDate: returnDate,
+                adults: adults,
+                children: children,
+                infants: infants,
+                travelClass: flightClass,
+                nonStop: nonStop,
+            }).toString();
+
+            const response = await axios.get(`${BACKEND_URL}/search?${queryParams}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            if (response.data.data.length === 0) {
-                setNoResults(true);
+
+            if (response.data && response.data.data && response.data.data.length > 0) {
+                setFlights(response.data.data);
+                console.log(response.data.data);
+                setDisplay(false);
             } else {
-                //setFlights(response.data.data);
-                const formattedData = formatFlightData(response.data.data);
-                //setFormattedFlightData(formattedData);
-                const aiInput = `${formattedData} Convert this into english sentences. It is from an API that returns the details of a flight. Make it straight forward please. No extra just make the data into easy to read english sentences please. The data provided includes departure and arrival times both ways, duration, stops, and price. Make sure to separate the data into different sentences and lines.`
-                await fetchData(aiInput);
-                //console.log(formattedData);
+                setFlights([]);
             }
         } catch (error) {
-            console.error("Error fetching flights", error);
+            console.error("Error fetching flights:", error);
+            setFlights([]);
         } finally {
             setIsLoading(false);
-            setDisplay(false);
         }
     };
 
     const handleSearch = async (e) => {
         e.preventDefault();
-        try {
-            const token = await fetchAccessToken();
-            await getCheapestFlights(token);
-        } catch (error) {
-            console.error('Error in handleSearch:', error);
-            setIsLoading(false);
-        }
-    };
-
-    const formatFlightData = (flights) => {
-        return flights.map((flight, flightIndex) => {
-            return flight.itineraries.map((itinerary, itineraryIndex) => {
-                return itinerary.segments.map((segment, segmentIndex) => {
-                    const departure = segment.departure;
-                    const arrival = segment.arrival;
-                    const duration = segment.duration.replace('PT', '').replace('H', 'h ').replace('M', 'm');
-                    const stops = segment.numberOfStops === 0 ? 'Direct' : `${segment.numberOfStops} stops`;
-                    return `Segment ${segmentIndex + 1}: ${departure.iataCode} to ${arrival.iataCode}\n` +
-                        `Carrier: ${segment.carrierCode}, Flight Number: ${segment.number}\n` +
-                        `Departure: ${departure.at}, Arrival: ${arrival.at}\n` +
-                        `Duration: ${duration}, Stops: ${stops}\n`;
-                }).join('\n');
-            }).join('\n');
-        }).join('\n') + `\nPrice: ${flights[0].price.total}`;
-    };
-
-    async function fetchData(query) {
-        try {
-            const genAI = new GoogleGenerativeAI(geminiApiKey);
-            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-            const results = await model.generateContent(query);
-
-            const response = results.response;
-
-            const text = response.text() + "*";
-
-            const matches = text.match(/\*([^*]+)\*/g).map(item => item.trim().slice(1, -1).trim());
-
-            setResponse(matches);
-        }
-        catch (error) {
-            setResponse("ERROR, try again");
-            console.log("ERROR: ", error);
-        }
-    }
-
-    const listStyle = {
-        listStyleType: 'none', // This removes the bullet points
-        padding: 0, // This removes the default padding
-        margin: 0 // This removes the default margin
+        await getCheapestFlights();
     };
 
     return (
@@ -227,24 +172,39 @@ const FlightSearchComponent = () => {
                         </div>
                     )}
 
-
-                    {noResults == true && (
-                        <div>No flights found for the specified criteria. Please try again with different parameters.</div>
-                    )}
-
-                    {noResults == false &&
+                    {flights.length > 0 ? (
                         <div>
                             <h2>Flight Results</h2>
+                            {flights.map((flight, flightIndex) => (
+                                <div key={flightIndex}>
+                                    {/* Display outbound flight details */}
+                                    <h3>Outbound Flight:</h3>
+                                    {flight.itineraries[0].segments.map((segment, segmentIndex) => (
+                                        <p key={segmentIndex}>
+                                            {`From: ${segment.departure.iataCode} to ${segment.arrival.iataCode}, Departure Time: ${segment.departure.at}, Arrival Time: ${segment.arrival.at}`}
+                                            {segmentIndex < flight.itineraries[0].segments.length - 1 ? " \nLayover:" : ""}
+                                        </p>
+                                    ))}
 
-                            <ul style={listStyle}>
-                                {response.map((item, index) => (
-                                    <li>
-                                        {item}
-                                        <hr />
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>}
+                                    {flight.itineraries.length > 1 && (
+                                        <>
+                                            <h3>Return Flight:</h3>
+                                            {flight.itineraries[1].segments.map((segment, segmentIndex) => (
+                                                <p key={segmentIndex}>
+                                                    {`From: ${segment.departure.iataCode} to ${segment.arrival.iataCode}, Departure Time: ${segment.departure.at}, Arrival Time: ${segment.arrival.at}`}
+                                                    {segmentIndex < flight.itineraries[1].segments.length - 1 ? " \nLayover:" : ""}
+                                                </p>
+                                            ))}
+                                        </>
+                                    )}
+
+                                    <p>{`Price: ${flight.price.total} ${flight.price.currency}`}</p>
+                                </div>
+                            ))}
+                        </div>
+                    ) : !display && (
+                        <div>No flights found for the specified criteria. Please try again with different parameters.</div>
+                    )}
                 </>
             )}
         </div>
