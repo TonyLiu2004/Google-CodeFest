@@ -39,26 +39,18 @@ function Saved() {
 
     return (
         <div>
-            <br/>
+            <br />
             {itineraries.length > 0 ? (
-                <ul>
-                    {itineraries.map((item, index) => (
-                        <li key={index}>
+                <ul style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', listStyleType: 'none', padding: 0, }}>
+                    {itineraries.map((item) => (
+                        <li key={item.id} style={{ border: '1px solid #ddd', borderRadius: '4px', padding: '10px', backgroundColor: '#36454f' }}>
                             <a href={item.pdfUrl} target="_blank" rel="noopener noreferrer">{item.displayName}</a>
-
-                            <br />
-
                             <iframe
                                 src={item.pdfUrl}
-                                width="300"
-                                height="400"
+                                style={{ width: '100%', height: '400px' }} // Ensure iframe size is constant
                                 title={item.displayName}
                             ></iframe>
-
-                            <br />
-
                             <button onClick={() => deleteItinerary(item.id)}>Delete</button>
-
                         </li>
                     ))}
                 </ul>
@@ -70,6 +62,7 @@ function Saved() {
             )}
         </div>
     );
+
 }
 
 export default Saved;
