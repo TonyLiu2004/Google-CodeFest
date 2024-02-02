@@ -13,7 +13,7 @@ const FlightSearchComponent = () => {
     const [infants, setInfants] = useState(0);
     const [departureDate, setDepartureDate] = useState('');
     const [returnDate, setReturnDate] = useState('');
-    const [flightClass, setFlightClass] = useState('ECONOMY');
+    const [flightClass, setFlightClass] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [flights, setFlights] = useState([]);
     const [display, setDisplay] = useState(true);
@@ -193,7 +193,6 @@ const FlightSearchComponent = () => {
                             <h2>Flight Results</h2>
                             {flights.map((flight, flightIndex) => (
                                 <div key={flightIndex}>
-                                    {/* Display outbound flight details */}
                                     <h3>Outbound Flight:</h3>
                                     {flight.itineraries[0].segments.map((segment, segmentIndex) => (
                                         <p key={segmentIndex}>

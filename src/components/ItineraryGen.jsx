@@ -22,6 +22,7 @@ function ItineraryGenerator({ dim }) {
     const [style, setStyle] = useState("");
     const [climate, setClimate] = useState("");
     const [response, setResponse] = useState("");
+    const [location, setLocation] = useState("");
 
     const handleActivity = (event) => {
         const value = event.target.value;
@@ -34,6 +35,10 @@ function ItineraryGenerator({ dim }) {
             setActivities(activities.filter((item) => item !== value));
         }
     }
+
+    const handleLocationChange = (event) => {
+        setLocation(event.target.value);
+    };
 
     function uncheckAllCheckboxes() {
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -79,10 +84,10 @@ function ItineraryGenerator({ dim }) {
         if (dim == "No") {
             temp += "Please mention one suitable country put the generated activities in a numbered list with a title and details. Include price rounded to the nearest whole number.";
         } else {
-            if (selectedCountry == "")
+            if (location == "")
                 alert("Location cannot be empty, try again");
             else
-                temp += "I would like to do the aforementioned activities in " + selectedCountry + ". Please put the generated activities in a numbered list (1.,2.,3.,etc.) each with a title and detailed bullet points. Go directly into the numbered list, no general title or anything else on the first line. Include price rounded to the nearest whole number.";
+                temp += "I would like to do the aforementioned activities in " + location + ". Please put the generated activities in a numbered list (1.,2.,3.,etc.) each with a title and detailed bullet points. Go directly into the numbered list, no general title or anything else on the first line. Include price rounded to the nearest whole number.";
         }
         console.log(temp);
         //resetting inputs
@@ -201,7 +206,7 @@ function ItineraryGenerator({ dim }) {
             .replace(/<p id="card-text"/g, '<p style="white-space: pre-wrap; text-align: left; margin-right:30px; margin-left:10px; " id="card-text"')
             .replace(/<div class="card"/g, '<div style="display: flex; justify-content: space-between; border: 1px solid black; border-radius: 4px; background-color: rgba(56, 56, 56, 0.611); margin-bottom:10px"')
             .replace(/<img[^>]*src="([^"]*)"[^>]*>/g, '<img style="width: 35%; height: auto; max-width: 400px; max-height: 400px;" src="$1" />');
-    
+
         let mywindow = window.open("", "PRINT", "height=400,width=600");
         mywindow.document.write(`
             <html>
@@ -229,8 +234,8 @@ function ItineraryGenerator({ dim }) {
         setTimeout(() => {
             mywindow.print();
             mywindow.close();
-        }, totalImages * 100); 
-    
+        }, totalImages * 100);
+
         return modifiedHTML;
     }
 
@@ -240,7 +245,9 @@ function ItineraryGenerator({ dim }) {
         setDisplayName(event.target.value);
     }
 
+
     const [loaderIteniery, setLoaderItinerary] = useState(false);
+
     const saveItinerary = async () => {
         setLoaderItinerary(true);
         const pdf = new jsPDF("p", "mm", "a4");
@@ -276,28 +283,6 @@ function ItineraryGenerator({ dim }) {
         } catch (error) {
             console.error("Error: ", error);
         }
-    }
-
-    const [selectedCountry, setSelectedCountry] = useState('');
-    if (dim == "Yes") {
-        var country_list = ["None", "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Anguilla", "Antigua &amp; Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bosnia &amp; Herzegovina", "Botswana", "Brazil", "British Virgin Islands", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Cape Verde", "Cayman Islands", "Chad", "Chile", "China", "Colombia", "Congo", "Cook Islands", "Costa Rica", "Cote D Ivoire", "Croatia", "Cruise Ship", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Estonia", "Ethiopia", "Falkland Islands", "Faroe Islands", "Fiji", "Finland", "France", "French Polynesia", "French West Indies", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea Bissau", "Guyana", "Haiti", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kuwait", "Kyrgyz Republic", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macau", "Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Mauritania", "Mauritius", "Mexico", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Namibia", "Nepal", "Netherlands", "Netherlands Antilles", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Norway", "Oman", "Pakistan", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Puerto Rico", "Qatar", "Reunion", "Romania", "Russia", "Rwanda", "Saint Pierre &amp; Miquelon", "Samoa", "San Marino", "Satellite", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", "South Africa", "South Korea", "Spain", "Sri Lanka", "St Kitts &amp; Nevis", "St Lucia", "St Vincent", "St. Lucia", "Sudan", "Suriname", "Swaziland", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor L'Este", "Togo", "Tonga", "Trinidad &amp; Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks &amp; Caicos", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", "Uruguay", "Uzbekistan", "Venezuela", "Vietnam", "Virgin Islands (US)", "Yemen", "Zambia", "Zimbabwe"];
-
-        useEffect(() => {
-            const countrySelect = document.getElementById("country");
-            //console.log(countrySelect);
-            country_list.forEach(country => {
-                const option = document.createElement("option");
-                option.value = country;
-                option.textContent = country;
-                countrySelect.appendChild(option);
-            }, []);
-
-
-        })
-    }
-    const CountryHandleChange = (event) => {
-        console.log(event.target.value);
-        setSelectedCountry(event.target.value);
     }
 
     const savePdfUrlToFirestore = async (pdfUrl) => {
@@ -403,11 +388,9 @@ function ItineraryGenerator({ dim }) {
 
                 {dim === "Yes" &&
                     <div>
-                        <>
-                            <label htmlFor="country">Country Name: &nbsp;</label>
-                            <select id="country" onChange={CountryHandleChange}></select>
-                            <br /><br />
-                        </>
+                        <label htmlFor="location">Specific Location: &nbsp;</label>
+                        <input type="text" id="location" value={location} placeholder="Enter a specific location" onChange={handleLocationChange} />
+                        <br /><br />
                     </div>
                 }
 
@@ -499,7 +482,7 @@ function ItineraryGenerator({ dim }) {
                     <br />
                     <br />
 
-                    {loaderIteniery && <><div className="loader"></div><br/></>}
+                    {loaderIteniery && <><div className="loader"></div><br /></>}
                     <button onClick={saveItinerary}
                         disabled={!displayName.trim()}
                     >
