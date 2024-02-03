@@ -5,10 +5,6 @@
     text-align: center;
 }
 
-.travel{
-  margin-top: 6rem;
-}
-
 .card {
     padding: 2em;
 }
@@ -90,3 +86,42 @@
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+.travel{
+  margin-top: 6rem;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+  
+.travel-page-background {
+  background-image: url(../assets/destination.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.travel-button{
+  display:flex;
+  align-items: center;
+  justify-content: left;
+  border-radius:20px;
+  width: 350px;
+  padding-left:15px;
+  padding-top:0px;
+  padding-bottom:0px;
+  padding-right:0px;
+}
+
+.travel-title{
+  display:flex;
+  text-align: center;
+}
+
+.travel-subtitle{
+  text-align: center;
+}
+
+.button-title{
+  font-weight: bolder;
+  font-size:x-large;
+}

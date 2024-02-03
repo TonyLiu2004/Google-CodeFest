@@ -24,6 +24,7 @@ function ItineraryGenerator({ dim }) {
     const [response, setResponse] = useState("");
     const [location, setLocation] = useState("");
 
+    document.body.classList.remove('travel-page-background');
     const handleActivity = (event) => {
         const value = event.target.value;
         const isChecked = event.target.checked;
@@ -295,8 +296,11 @@ function ItineraryGenerator({ dim }) {
     }
 
     return (
-        <div>
+        <div id="itineraryGen-container">
             <div id="theForm">
+                <h1 style={{color:"white", textAlign:"center"}}>
+                    Travel Planner 
+                </h1>
                 <form>
                     <div id="activitiesTop">
                         <h3 style={{ marginBottom: "0px" }}>Desired Activities:</h3>
