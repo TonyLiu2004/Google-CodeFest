@@ -13,10 +13,11 @@ const FlightSearchComponent = () => {
     const [infants, setInfants] = useState(0);
     const [departureDate, setDepartureDate] = useState('');
     const [returnDate, setReturnDate] = useState('');
-    const [flightClass, setFlightClass] = useState('');
+    const [flightClass, setFlightClass] = useState('ECONOMY');
     const [isLoading, setIsLoading] = useState(false);
     const [flights, setFlights] = useState([]);
     const [display, setDisplay] = useState(true);
+    const [searched, setSearched] = useState(false);
 
     const fetchAccessToken = async () => {
         try {
@@ -59,6 +60,7 @@ const FlightSearchComponent = () => {
                 console.log(response.data.data);
                 setDisplay(false);
             } else {
+                console.log("No flights found for the specified criteria.");
                 setFlights([]);
             }
         } catch (error) {
@@ -71,6 +73,7 @@ const FlightSearchComponent = () => {
 
     const handleSearch = async (e) => {
         e.preventDefault();
+        setSearched(true);
         await getCheapestFlights();
     };
 
@@ -110,7 +113,10 @@ const FlightSearchComponent = () => {
                                     <select
                                         className="form-input"
                                         value={flightClass}
-                                        onChange={(e) => setFlightClass(e.target.value)}
+                                        onChange={(e) => {
+                                            console.log("Selected flight class:", e.target.value);
+                                            setFlightClass(e.target.value);
+                                        }}
                                     >
                                         <option value="ECONOMY">Economy</option>
                                         <option value="PREMIUM_ECONOMY">Premium Economy</option>
@@ -190,7 +196,8 @@ const FlightSearchComponent = () => {
 
                     {flights.length > 0 ? (
                         <div>
-                            <h2>Flight Results</h2>
+                            <h2>Potential Flight Details</h2>
+                            <hr />
                             {flights.map((flight, flightIndex) => (
                                 <div key={flightIndex}>
                                     <h3>Outbound Flight:</h3>
@@ -217,7 +224,7 @@ const FlightSearchComponent = () => {
                                 </div>
                             ))}
                         </div>
-                    ) : !display && (
+                    ) : searched && (
                         <div>No flights found for the specified criteria. Please try again with different parameters.</div>
                     )}
                 </>

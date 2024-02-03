@@ -47,7 +47,7 @@ function Saved() {
                             <a href={item.pdfUrl} target="_blank" rel="noopener noreferrer">{item.displayName}</a>
                             <iframe
                                 src={item.pdfUrl}
-                                style={{ width: '100%', height: '400px' }} // Ensure iframe size is constant
+                                style={{ width: '100%', height: '400px' }}
                                 title={item.displayName}
                             ></iframe>
                             <button onClick={() => deleteItinerary(item.id)}>Delete</button>
