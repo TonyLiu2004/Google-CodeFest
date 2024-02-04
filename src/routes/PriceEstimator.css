@@ -86,3 +86,10 @@
     display:flex;
     justify-content: space-between;
 }
+
+.flight-details{
+    color:black;
+    background-color: #ffffff3e;
+    border-radius: 10px;
+    padding:20px;
+}

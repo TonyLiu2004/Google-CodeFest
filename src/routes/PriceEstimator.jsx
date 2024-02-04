@@ -217,7 +217,7 @@ const FlightSearchComponent = () => {
                     )}
 
                     {flights.length > 0 ? (
-                        <div>
+                        <div className="flight-details">
                             <h2>Potential Flight Details</h2>
                             <hr />
                             {flights.map((flight, flightIndex) => (
