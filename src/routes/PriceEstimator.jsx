@@ -74,6 +74,7 @@ const FlightSearchComponent = () => {
     const handleSearch = async (e) => {
         e.preventDefault();
         setSearched(true);
+        setDisplay(false);
         await getCheapestFlights();
     };
 
