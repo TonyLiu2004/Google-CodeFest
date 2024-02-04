@@ -247,7 +247,7 @@ const FlightSearchComponent = () => {
                             ))}
                         </div>
                     ) : searched && (
-                        <div>No flights found for the specified criteria. Please try again with different parameters.</div>
+                        <div style={{color:"black"}}>No flights found for the specified criteria. Please try again with different parameters.</div>
                     )}
                 </>
             )}
