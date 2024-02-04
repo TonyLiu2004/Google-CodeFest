@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './PriceEstimator.css';
 import axios from 'axios';
 
@@ -78,119 +78,140 @@ const FlightSearchComponent = () => {
         await getCheapestFlights();
     };
 
+    useEffect(() => {
+        document.body.classList.add('price-estimator-background');
+        return () => {
+            document.body.classList.remove('price-estimator-background');
+        };
+    }, []);
     return (
-        <div>
+        <div className="everything">
             {isLoading ? (
                 <div className="loader"></div>
             ) : (
                 <>
+                    <br/>
                     {display && (
-                        <div>
+                        <div className="form-container">
+                            <h1 style={{textAlign:"left", paddingLeft:"10px", width:"45vw", paddingBottom:"10px "}}>Price Estimator</h1>
                             <form onSubmit={handleSearch} className="flight-search-form">
-                                <div className="form-group">
-                                    <label className="form-label">Origin (IATA Code):</label>
-                                    <input
-                                        className="form-input"
-                                        type="text"
-                                        value={origin}
-                                        onChange={(e) => setOrigin(e.target.value)}
-                                        placeholder="Origin (IATA Code)"
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">Destination (IATA Code):</label>
-                                    <input
-                                        className="form-input"
-                                        type="text"
-                                        value={destination}
-                                        onChange={(e) => setDestination(e.target.value)}
-                                        placeholder="Destination (IATA Code)"
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">Flight Class:</label>
-                                    <select
-                                        className="form-input"
-                                        value={flightClass}
-                                        onChange={(e) => {
-                                            console.log("Selected flight class:", e.target.value);
-                                            setFlightClass(e.target.value);
-                                        }}
-                                    >
-                                        <option value="ECONOMY">Economy</option>
-                                        <option value="PREMIUM_ECONOMY">Premium Economy</option>
-                                        <option value="BUSINESS">Business</option>
-                                        <option value="FIRST">First</option>
-                                    </select>
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">Adults:</label>
-                                    <input
-                                        className="form-input"
-                                        type="number"
-                                        value={adults}
-                                        onChange={(e) => setAdults(e.target.value)}
-                                        placeholder="Adults"
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">Children:</label>
-                                    <input
-                                        className="form-input"
-                                        type="number"
-                                        value={children}
-                                        onChange={(e) => setChildren(e.target.value)}
-                                        placeholder="Children"
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">Infants:</label>
-                                    <input
-                                        className="form-input"
-                                        type="number"
-                                        value={infants}
-                                        onChange={(e) => setInfants(e.target.value)}
-                                        placeholder="Infants"
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">Departure Date:</label>
-                                    <input
-                                        className="form-input"
-                                        type="date"
-                                        value={departureDate}
-                                        onChange={(e) => setDepartureDate(e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">Return Date:</label>
-                                    <input
-                                        className="form-input"
-                                        type="date"
-                                        value={returnDate}
-                                        onChange={(e) => setReturnDate(e.target.value)}
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label className="form-label">
-                                        Non-stop flight?
+                                <h2 className="form-title">Flight Information</h2>
+                                <div id="flight-info">
+                                    <div className="form-group">
+                                        <label className="form-label">Origin (IATA Code):</label>
                                         <input
-                                            type="checkbox"
-                                            checked={nonStop}
-                                            onChange={(e) => setNonStop(e.target.checked)}
+                                            className="form-input"
+                                            type="text"
+                                            value={origin}
+                                            onChange={(e) => setOrigin(e.target.value)}
+                                            placeholder="Origin (IATA Code)"
                                         />
-                                    </label>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label className="form-label">Destination (IATA Code):</label>
+                                        <input
+                                            className="form-input"
+                                            type="text"
+                                            value={destination}
+                                            onChange={(e) => setDestination(e.target.value)}
+                                            placeholder="Destination (IATA Code)"
+                                        />
+                                    </div>
+                                
+                                    <div className="form-group">
+                                        <label className="form-label">Flight Class:</label>
+                                        <select
+                                            className="form-input"
+                                            value={flightClass}
+                                            onChange={(e) => {
+                                                console.log("Selected flight class:", e.target.value);
+                                                setFlightClass(e.target.value);
+                                            }}
+                                        >
+                                            <option value="ECONOMY">Economy</option>
+                                            <option value="PREMIUM_ECONOMY">Premium Economy</option>
+                                            <option value="BUSINESS">Business</option>
+                                            <option value="FIRST">First</option>
+                                        </select>
+                                    </div>
                                 </div>
 
-                                <button className="submit-button" type="submit">Search Flights</button>
+                                <h2 className="form-title">Passenger Information</h2>
+                                <div id="passenger-info">
+                                    <div className="form-group">
+                                        <label className="form-label">Adults:</label>
+                                        <input
+                                            className="form-input"
+                                            type="number"
+                                            value={adults}
+                                            onChange={(e) => setAdults(e.target.value)}
+                                            placeholder="Adults"
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label className="form-label">Children:</label>
+                                        <input
+                                            className="form-input"
+                                            type="number"
+                                            value={children}
+                                            onChange={(e) => setChildren(e.target.value)}
+                                            placeholder="Children"
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label className="form-label">Infants:</label>
+                                        <input
+                                            className="form-input"
+                                            type="number"
+                                            value={infants}
+                                            onChange={(e) => setInfants(e.target.value)}
+                                            placeholder="Infants"
+                                        />
+                                    </div>
+                                </div>
+
+                                <h2 className="form-title">Travel Details</h2>
+                                <div id="travel-info">
+                                    <div className="form-group">
+                                        <label className="form-label">Departure Date:</label>
+                                        <input
+                                            className="form-input"
+                                            type="date"
+                                            value={departureDate}
+                                            onChange={(e) => setDepartureDate(e.target.value)}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label className="form-label">Return Date:</label>
+                                        <input
+                                            className="form-input"
+                                            type="date"
+                                            value={returnDate}
+                                            onChange={(e) => setReturnDate(e.target.value)}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label className="form-label" style={{paddingTop:"30px", textAlign:"left"}}>
+                                            Non-stop flight? &nbsp;
+                                            <input
+                                                type="checkbox"
+                                                checked={nonStop}
+                                                onChange={(e) => setNonStop(e.target.checked)}
+                                            />
+                                        </label>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div id="button-flex">
+                                    <>&nbsp;</>
+                                    <button className="submit-button" type="submit">Search Flights</button>
+                                    <>&nbsp;</>
+                                </div>
                             </form>
                         </div>
                     )}

@@ -12,6 +12,7 @@
 
 .form-group {
     margin-bottom: 10px;
+    width:200px;
     /* Adjust the space between form groups */
 }
 
@@ -22,6 +23,9 @@
     /* Space between the label and the input */
     font-weight: bold;
     /* Optional: makes the label text bold */
+    text-align: left;
+    /* Optional: centers the label text */
+    font-size: 15px;
 }
 
 .form-input {
@@ -39,7 +43,6 @@
     background-color: #4CAF50;
     /* Example button color, change as needed */
     color: white;
-    padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -48,4 +51,38 @@
 .submit-button:hover {
     background-color: #45a049;
     /* Darker shade for hover effect */
+}
+
+
+#flight-info, #travel-info, #passenger-info{
+    display:flex;
+    margin: 0 auto;
+    justify-content: space-between;
+    width:45vw;
+    padding-bottom:10px;
+    flex-wrap: wrap;
+}
+
+.form-container{
+    margin-left: 40%;
+    padding-bottom:20px;
+    color:black;
+    background-color: #ffffff3e;
+    border-radius: 10px;
+    margin-right:-40%;
+    padding:20px;
+    padding-top:5px;
+}
+
+.price-estimator-background{    
+    background-image: url(../assets/plane2.png);
+}
+
+.form-title{
+    text-align: left;
+}
+
+#button-flex{
+    display:flex;
+    justify-content: space-between;
 }
