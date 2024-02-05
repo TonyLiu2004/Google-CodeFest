@@ -198,9 +198,8 @@ const FlightSearchComponent = () => {
                 <>
 
                     {/* STYLE THIS */}
-                    <div>
-                        <h1> Need Help finding an IATA code? </h1>
-
+                    <div className='aita-form'>
+                        <h1> Need help finding an IATA code? </h1>
 
                         <input
                             type="text"
@@ -208,11 +207,8 @@ const FlightSearchComponent = () => {
                             placeholder="Departure Location"
                         >
                         </input>
-
-                        <hr />
-
                         <button onClick={() => setCodeOne()}> Find IATA </button>
-
+                        <hr />
                         <br />
                         {iataCodeOne != null && <p>
                             {`IATA Code for ${findIATAOne} is: ${iataCodeOne}`}
@@ -227,14 +223,13 @@ const FlightSearchComponent = () => {
                         >
                         </input>
 
-                        <hr />
-
                         <button onClick={() => setCodeTwo()}> Find IATA </button>
-
                         <br />
                         {iataCodeTwo != null && <p>
                             {`IATA Code for ${findIATATwo} is: ${iataCodeTwo}`}
                         </p>}
+
+                        
                     </div>
                     {/* STYLE THIS */}
 
@@ -251,7 +246,7 @@ const FlightSearchComponent = () => {
                                             type="text"
                                             value={origin}
                                             onChange={(e) => setOrigin(e.target.value.toUpperCase())}
-                                            placeholder="Origin (IATA Code)"
+                                            placeholder="Origin"
                                         />
                                     </div>
 
@@ -262,7 +257,7 @@ const FlightSearchComponent = () => {
                                             type="text"
                                             value={destination}
                                             onChange={(e) => setDestination(e.target.value.toUpperCase())}
-                                            placeholder="Destination (IATA Code)"
+                                            placeholder="Destination"
                                         />
                                     </div>
 

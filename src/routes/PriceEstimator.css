@@ -10,6 +10,14 @@
     margin: 0 auto;
 }
 
+input, select{
+    background-color: rgb(229, 224, 204);
+    border: 0;
+    border-radius: 5px;
+    line-height: 1.5rem;
+    color: black;
+}
+
 .form-group {
     margin-bottom: 10px;
     width:200px;
@@ -40,7 +48,7 @@
 }
 
 .submit-button {
-    background-color: #4CAF50;
+    background-color: rgb(110, 119, 152);
     /* Example button color, change as needed */
     color: white;
     border: none;
@@ -49,7 +57,7 @@
 }
 
 .submit-button:hover {
-    background-color: #45a049;
+    background-color: #423d5a;
     /* Darker shade for hover effect */
 }
 
@@ -64,14 +72,10 @@
 }
 
 .form-container{
-    margin-left: 40%;
-    padding-bottom:20px;
-    color:black;
+    color:rgb(52, 51, 73);
     background-color: #ffffff3e;
     border-radius: 10px;
-    margin-right:-40%;
-    padding:20px;
-    padding-top:5px;
+    padding:50px;
 }
 
 .price-estimator-background{    
@@ -93,3 +97,36 @@
     border-radius: 10px;
     padding:20px;
 }
+
+.aita-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+}
+
+.aita-form h1{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: rgb(40, 43, 61);
+}
+
+.aita-form input, button{
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.aita-form button{
+background-color: rgb(105, 114, 145);
+}
+
+.aita-form button:hover{
+    background-color: rgb(64, 61, 95);
+    }
+.everything{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    
+}
+
