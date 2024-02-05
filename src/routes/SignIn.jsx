@@ -32,15 +32,19 @@ function SignIn() {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Email"
                 />
+
                 <br />
+
                 <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password"
                 />
+
                 <br />
                 <hr />
+
                 <button type="submit" onClick={handleSubmit}> Sign In </button>
             </form>
         </div>

@@ -78,6 +78,48 @@ const FlightSearchComponent = () => {
         await getCheapestFlights();
     };
 
+    //example output:
+    //2024-04-02T17:50:00
+    function parseDate(date_and_time) {
+        let formatted_date = "";
+
+        let date = date_and_time.split('T')[0];
+        let time = date_and_time.split('T')[1];
+
+        let hour = time.split(':')[0];
+
+        if (hour >= "12") {
+            hour = hour - 12;
+            time = `${hour}:${time.split(':')[1]} PM`;
+        }
+        else if (hour < "12") {
+            time = `${hour}:${time.split(':')[1]} AM`;
+        }
+
+        let year = date.split('-')[0];
+        let month = date.split('-')[1];
+        let day = date.split('-')[2];
+
+        if (month == "01") month = "January";
+        else if (month == "02") month = "February";
+        else if (month == "03") month = "March";
+        else if (month == "04") month = "April";
+        else if (month == "05") month = "May";
+        else if (month == "06") month = "June";
+        else if (month == "07") month = "July";
+        else if (month == "08") month = "August";
+        else if (month == "09") month = "September";
+        else if (month == "10") month = "October";
+        else if (month == "11") month = "November";
+        else if (month == "12") month = "December";
+
+        formatted_date = `${month} ${day}, ${year} at ${time}`;
+        return formatted_date;
+    }
+
+    console.log(parseDate("2024-04-02T17:50:00"));
+
+
     useEffect(() => {
         document.body.classList.add('price-estimator-background');
         return () => {
@@ -225,7 +267,7 @@ const FlightSearchComponent = () => {
                                     <h3>Outbound Flight:</h3>
                                     {flight.itineraries[0].segments.map((segment, segmentIndex) => (
                                         <p key={segmentIndex}>
-                                            {`From: ${segment.departure.iataCode} to ${segment.arrival.iataCode}, Departure Time: ${segment.departure.at}, Arrival Time: ${segment.arrival.at}`}
+                                            {`From: ${segment.departure.iataCode} to ${segment.arrival.iataCode}, Departure Time: ${parseDate(segment.departure.at)}, Arrival Time: ${parseDate(segment.arrival.at)}`}
                                             {segmentIndex < flight.itineraries[0].segments.length - 1 ? " \nLayover:" : ""}
                                         </p>
                                     ))}
@@ -235,7 +277,7 @@ const FlightSearchComponent = () => {
                                             <h3>Return Flight:</h3>
                                             {flight.itineraries[1].segments.map((segment, segmentIndex) => (
                                                 <p key={segmentIndex}>
-                                                    {`From: ${segment.departure.iataCode} to ${segment.arrival.iataCode}, Departure Time: ${segment.departure.at}, Arrival Time: ${segment.arrival.at}`}
+                                                    {`From: ${segment.departure.iataCode} to ${segment.arrival.iataCode}, Departure Time: ${parseDate(segment.departure.at)}, Arrival Time: ${parseDate(segment.arrival.at)}`}
                                                     {segmentIndex < flight.itineraries[1].segments.length - 1 ? " \nLayover:" : ""}
                                                 </p>
                                             ))}

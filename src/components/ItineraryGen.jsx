@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import '../routes/Travel.css'
 import React from 'react';
-//import { GoogleGenerativeAI } from '@google/generative-ai';
 import { db, auth } from '../firebaseConfig.js';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -10,8 +9,6 @@ import html2canvas from "html2canvas";
 import Card from "./Card.jsx";
 
 function ItineraryGenerator({ dim }) {
-    const API_KEY = import.meta.env.VITE_APP_API_KEY;
-
     const [display, setDisplay] = useState(false);
 
     const [budget, setBudget] = useState(0);
@@ -167,39 +164,6 @@ function ItineraryGenerator({ dim }) {
         }
     }
 
-
-
-    /* 
-    async function fetchData(query) {
-        try {
-            const genAI = new GoogleGenerativeAI(API_KEY);
-            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-            const results = await model.generateContent(query);
-            console.log("RESULTS: ", results);
-            const response = results.response;
-            console.log("RESPONSE: ", response);
-            const text = response.text();
-            console.log("TEXT: \n", text);
-            setResponse(text);
-        }
-        catch (error) {
-            setResponse("ERROR, try again");
-            console.log("ERROR: ", error);
-        }
-    }
- */
-    // if (response != "") {
-    //     let t = aiOutputFilter(response);
-    //     let selected_div = document.querySelector('.results');
-    //     for (let i = 0; i < t.length; i++) {
-    //         var each_item = document.createElement('p');
-    //         each_item.style = "whiteSpace: 'pre-wrap';";
-    //         each_item.textContent = t[i];
-    //         each_item.innerHTML += "<br/><br/>";
-    //         selected_div.appendChild(each_item);
-    //     }
-    //     //setResponse("");
-    // }
     const makePDF = () => {
         const cardContainer = document.createElement('div');
         cardContainer.innerHTML = document.getElementsByClassName("cards")[0].innerHTML;
@@ -298,8 +262,8 @@ function ItineraryGenerator({ dim }) {
     return (
         <div id="itineraryGen-container">
             <div id="theForm">
-                <h1 style={{color:"white", textAlign:"center"}}>
-                    Travel Planner 
+                <h1 style={{ color: "white", textAlign: "center" }}>
+                    Travel Planner
                 </h1>
                 <form>
                     <div id="activitiesTop">
