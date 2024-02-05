@@ -1,7 +1,42 @@
-.nav-container{
+.nav-container {
     opacity: 0.5;
     transition: opacity 0.3s ease-in-out;
 }
-.nav-container:hover{
+
+.nav-container:hover {
     opacity: 1;
+}
+
+.settings-icon {
+    position: absolute;
+    top: 0;
+    left: 40px;
+    padding: 12px;
+    cursor: pointer;
+}
+
+.settings-dropdown {
+    position: absolute;
+    top: 35px;
+    left: -20px;
+    background-color: #888;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+    display: none;
+}
+
+.settings-icon:hover .settings-dropdown {
+    display: block;
+}
+
+.settings-link {
+    display: block;
+    padding: 5px;
+    text-decoration: none;
+    color: black;
+}
+
+.settings-link:hover {
+    background-color: #f0f0f0;
 }

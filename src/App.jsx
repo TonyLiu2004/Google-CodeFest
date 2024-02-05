@@ -1,7 +1,5 @@
-import { useState } from 'react'
 import './App.css'
 import React from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import SignUp from './routes/SignUP';
@@ -11,6 +9,8 @@ import About from './routes/About';
 import Travel from './routes/Travel';
 import Saved from './routes/Saved';
 import FlightSearchComponent from './routes/PriceEstimator';
+import DeleteAccount from './routes/Delete';
+import ChangePassword from './routes/ChangePassword';
 
 function App() {
   return (
@@ -24,6 +24,8 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/saved" element={<Saved />} />
         <Route path="/prices" element={<FlightSearchComponent />} />
+        <Route path="/delete-account" element={<DeleteAccount />} />
+        <Route path="/change-password" element={<ChangePassword />} />
       </Routes>
     </BrowserRouter>
 

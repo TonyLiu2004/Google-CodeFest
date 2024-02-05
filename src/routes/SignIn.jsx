@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 function SignIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    let navigate = useNavigate();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,7 +40,8 @@ function SignIn() {
                     placeholder="Password"
                 />
                 <br />
-                <button type="submit" onClick={handleSubmit}> Submit </button>
+                <hr />
+                <button type="submit" onClick={handleSubmit}> Sign In </button>
             </form>
         </div>
     );

@@ -90,10 +90,10 @@ const FlightSearchComponent = () => {
                 <div className="loader"></div>
             ) : (
                 <>
-                    <br/>
+                    <br />
                     {display && (
                         <div className="form-container">
-                            <h1 style={{textAlign:"left", paddingLeft:"10px", width:"45vw", paddingBottom:"10px "}}>Price Estimator</h1>
+                            <h1 style={{ textAlign: "left", paddingLeft: "10px", width: "45vw", paddingBottom: "10px " }}>Price Estimator</h1>
                             <form onSubmit={handleSearch} className="flight-search-form">
                                 <h2 className="form-title">Flight Information</h2>
                                 <div id="flight-info">
@@ -103,7 +103,7 @@ const FlightSearchComponent = () => {
                                             className="form-input"
                                             type="text"
                                             value={origin}
-                                            onChange={(e) => setOrigin(e.target.value)}
+                                            onChange={(e) => setOrigin(e.target.value.toUpperCase())}
                                             placeholder="Origin (IATA Code)"
                                         />
                                     </div>
@@ -114,11 +114,11 @@ const FlightSearchComponent = () => {
                                             className="form-input"
                                             type="text"
                                             value={destination}
-                                            onChange={(e) => setDestination(e.target.value)}
+                                            onChange={(e) => setDestination(e.target.value.toUpperCase())}
                                             placeholder="Destination (IATA Code)"
                                         />
                                     </div>
-                                
+
                                     <div className="form-group">
                                         <label className="form-label">Flight Class:</label>
                                         <select
@@ -196,7 +196,7 @@ const FlightSearchComponent = () => {
                                     </div>
 
                                     <div className="form-group">
-                                        <label className="form-label" style={{paddingTop:"30px", textAlign:"left"}}>
+                                        <label className="form-label" style={{ paddingTop: "30px", textAlign: "left" }}>
                                             Non-stop flight? &nbsp;
                                             <input
                                                 type="checkbox"
@@ -206,7 +206,7 @@ const FlightSearchComponent = () => {
                                         </label>
                                     </div>
                                 </div>
-                                <br/>
+                                <br />
                                 <div id="button-flex">
                                     <>&nbsp;</>
                                     <button className="submit-button" type="submit">Search Flights</button>
@@ -247,7 +247,7 @@ const FlightSearchComponent = () => {
                             ))}
                         </div>
                     ) : searched && (
-                        <div style={{color:"black"}}>No flights found for the specified criteria. Please try again with different parameters.</div>
+                        <div className="flight-details">No flights found for the specified criteria. Please try again with different parameters.</div>
                     )}
                 </>
             )}

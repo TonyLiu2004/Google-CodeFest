@@ -55,9 +55,11 @@ function SignUp() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm Password"
                 />
-                <br />
 
-                <button type="submit" onClick={handleSubmit}> Submit </button>
+                <br />
+                <hr />
+
+                <button type="submit" onClick={handleSubmit}> Sign Up </button>
             </form>
         </div>
     );
