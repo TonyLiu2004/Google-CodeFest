@@ -196,8 +196,8 @@ const FlightSearchComponent = () => {
                 <div className="loader"></div>
             ) : (
                 <>
-                    <br />
 
+                    {/* STYLE THIS */}
                     <div>
                         <h1> Need Help finding an IATA code? </h1>
 
@@ -235,9 +235,8 @@ const FlightSearchComponent = () => {
                         {iataCodeTwo != null && <p>
                             {`IATA Code for ${findIATATwo} is: ${iataCodeTwo}`}
                         </p>}
-
-
                     </div>
+                    {/* STYLE THIS */}
 
                     {display && (
                         <div className="form-container">
