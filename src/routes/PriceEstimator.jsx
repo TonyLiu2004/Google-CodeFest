@@ -18,6 +18,10 @@ const FlightSearchComponent = () => {
     const [flights, setFlights] = useState([]);
     const [display, setDisplay] = useState(true);
     const [searched, setSearched] = useState(false);
+    const [findIATAOne, setFindIATAOne] = useState(''); // departure
+    const [findIATATwo, setFindIATATwo] = useState(''); // arrival
+    const [iataCodeOne, setIataCodeOne] = useState(null); // departure IATA
+    const [iataCodeTwo, setIataCodeTwo] = useState(null); // arrival IATA
 
     const fetchAccessToken = async () => {
         try {
@@ -117,8 +121,68 @@ const FlightSearchComponent = () => {
         return formatted_date;
     }
 
-    console.log(parseDate("2024-04-02T17:50:00"));
+    //console.log(parseDate("2024-04-02T17:50:00"));
 
+    //Find IATA code function
+    async function fetchData(query) {
+        try {
+            const response = await fetch('http://localhost:3005/api/generateContent', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ query }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            //console.log("Full RESPONSE: ", data);
+
+            let textContent = '';
+            if (data && data.response && data.response.candidates && data.response.candidates.length > 0 &&
+                data.response.candidates[0].content && data.response.candidates[0].content.parts &&
+                data.response.candidates[0].content.parts.length > 0 && data.response.candidates[0].content.parts[0].text) {
+
+                textContent = data.response.candidates[0].content.parts[0].text;
+                // console.log("Extracted Text: ", textContent);
+                return textContent;
+
+            } else {
+                console.error("Invalid or missing text content in response", data);
+            }
+        } catch (error) {
+            console.error("ERROR: ", error);
+        }
+    }
+
+    async function FindCodeOne() {
+        let iata = await fetchData(`Return only ONE IATA code for the following location: ${findIATAOne}`);
+        //console.log("IATA CODE: ", iata);
+        return iata;
+    }
+
+    async function setCodeOne() {
+        let iata = await FindCodeOne();
+        //console.log("IATA CODE SECOND FUNCTION: ", iata);
+        setIataCodeOne(iata);
+        //console.log("IATA CODE STATE: ", iataCodeOne);
+    }
+
+    async function FindCodeTwo() {
+        let iata = await fetchData(`Return only ONE IATA code for the following location: ${findIATATwo}`);
+        //console.log("IATA CODE: ", iata);
+        return iata;
+    }
+
+    async function setCodeTwo() {
+        let iata = await FindCodeTwo();
+        //console.log("IATA CODE SECOND FUNCTION: ", iata);
+        setIataCodeTwo(iata);
+        //console.log("IATA CODE STATE: ", iataCodeTwo);
+    }
 
     useEffect(() => {
         document.body.classList.add('price-estimator-background');
@@ -133,6 +197,48 @@ const FlightSearchComponent = () => {
             ) : (
                 <>
                     <br />
+
+                    <div>
+                        <h1> Need Help finding an IATA code? </h1>
+
+
+                        <input
+                            type="text"
+                            onChange={(e) => setFindIATAOne(e.target.value)}
+                            placeholder="Departure Location"
+                        >
+                        </input>
+
+                        <hr />
+
+                        <button onClick={() => setCodeOne()}> Find IATA </button>
+
+                        <br />
+                        {iataCodeOne != null && <p>
+                            {`IATA Code for ${findIATAOne} is: ${iataCodeOne}`}
+                        </p>}
+
+                        <br />
+
+                        <input
+                            type="text"
+                            onChange={(e) => setFindIATATwo(e.target.value)}
+                            placeholder="Arrival Location"
+                        >
+                        </input>
+
+                        <hr />
+
+                        <button onClick={() => setCodeTwo()}> Find IATA </button>
+
+                        <br />
+                        {iataCodeTwo != null && <p>
+                            {`IATA Code for ${findIATATwo} is: ${iataCodeTwo}`}
+                        </p>}
+
+
+                    </div>
+
                     {display && (
                         <div className="form-container">
                             <h1 style={{ textAlign: "left", paddingLeft: "10px", width: "45vw", paddingBottom: "10px " }}>Price Estimator</h1>
@@ -167,7 +273,7 @@ const FlightSearchComponent = () => {
                                             className="form-input"
                                             value={flightClass}
                                             onChange={(e) => {
-                                                console.log("Selected flight class:", e.target.value);
+                                                //console.log("Selected flight class:", e.target.value);
                                                 setFlightClass(e.target.value);
                                             }}
                                         >
