@@ -2,7 +2,7 @@ import './App.css'
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import SignUp from './routes/SignUP';
+import SignUp from './routes/SignUp';
 import SignIn from './routes/SignIn'
 import Home from './routes/Home';
 import About from './routes/About';
