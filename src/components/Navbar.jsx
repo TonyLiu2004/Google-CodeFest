@@ -30,7 +30,7 @@ function Navbar() {
                 <>
                     <Link to="/prices" className="nav-link"> Price Esimator </Link>
                     <Link to="/saved" className="nav-link"> Saved </Link>
-                    <Link className="nav-link" onClick={() => { sessionStorage.removeItem("accessToken"); location.reload(); navigate('/'); }}> Logout </Link>
+                    <Link className="nav-link" onClick={() => { sessionStorage.removeItem("accessToken"); navigate('/'); location.reload(); }}> Logout </Link>
                 </>
             );
         }

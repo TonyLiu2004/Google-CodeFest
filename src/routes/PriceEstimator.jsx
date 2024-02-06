@@ -198,7 +198,7 @@ const FlightSearchComponent = () => {
                 <>
 
                     {/* STYLE THIS */}
-                    <div className='aita-form'>
+                    {display && <div className='aita-form'>
                         <h1> Need help finding an IATA code? </h1>
 
                         <input
@@ -207,12 +207,12 @@ const FlightSearchComponent = () => {
                             placeholder="Departure Location"
                         >
                         </input>
-                        <button onClick={() => setCodeOne()}> Find IATA </button>
-                        <hr />
-                        <br />
-                        {iataCodeOne != null && <p>
+
+                        <button onClick={() => setCodeOne()}> Find Departure IATA </button>
+
+                        {iataCodeOne != null && <div className="iata-container">
                             {`IATA Code for ${findIATAOne} is: ${iataCodeOne}`}
-                        </p>}
+                        </div>}
 
                         <br />
 
@@ -223,14 +223,14 @@ const FlightSearchComponent = () => {
                         >
                         </input>
 
-                        <button onClick={() => setCodeTwo()}> Find IATA </button>
-                        <br />
-                        {iataCodeTwo != null && <p>
-                            {`IATA Code for ${findIATATwo} is: ${iataCodeTwo}`}
-                        </p>}
+                        <button onClick={() => setCodeTwo()}> Find Arrival IATA </button>
 
-                        
-                    </div>
+                        {iataCodeTwo != null && <div className="iata-container">
+                            {`IATA Code for ${findIATATwo} is: ${iataCodeTwo}`}
+                        </div>}
+
+
+                    </div>}
                     {/* STYLE THIS */}
 
                     {display && (

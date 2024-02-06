@@ -10,7 +10,8 @@
     margin: 0 auto;
 }
 
-input, select{
+input,
+select {
     background-color: rgb(229, 224, 204);
     border: 0;
     border-radius: 5px;
@@ -20,7 +21,7 @@ input, select{
 
 .form-group {
     margin-bottom: 10px;
-    width:200px;
+    width: 200px;
     /* Adjust the space between form groups */
 }
 
@@ -62,43 +63,45 @@ input, select{
 }
 
 
-#flight-info, #travel-info, #passenger-info{
-    display:flex;
+#flight-info,
+#travel-info,
+#passenger-info {
+    display: flex;
     margin: 0 auto;
     justify-content: space-between;
-    width:45vw;
-    padding-bottom:10px;
+    width: 45vw;
+    padding-bottom: 10px;
     flex-wrap: wrap;
 }
 
-.form-container{
-    color:rgb(52, 51, 73);
+.form-container {
+    color: rgb(52, 51, 73);
     background-color: #ffffff3e;
     border-radius: 10px;
-    padding:50px;
+    padding: 50px;
 }
 
-.price-estimator-background{    
+.price-estimator-background {
     background-image: url(../assets/plane2.png);
 }
 
-.form-title{
+.form-title {
     text-align: left;
 }
 
-#button-flex{
-    display:flex;
+#button-flex {
+    display: flex;
     justify-content: space-between;
 }
 
-.flight-details{
-    color:black;
+.flight-details {
+    color: black;
     background-color: #ffffff3e;
     border-radius: 10px;
-    padding:20px;
+    padding: 20px;
 }
 
-.aita-form{
+.aita-form {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -106,27 +109,37 @@ input, select{
     padding: 3rem;
 }
 
-.aita-form h1{
-    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+.aita-form h1 {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     color: rgb(40, 43, 61);
 }
 
-.aita-form input, button{
+.aita-form input,
+button {
     padding: 0.5rem;
     margin-bottom: 0.5rem;
 }
-.aita-form button{
-background-color: rgb(105, 114, 145);
+
+.aita-form button {
+    background-color: rgb(105, 114, 145);
 }
 
-.aita-form button:hover{
+.aita-form button:hover {
     background-color: rgb(64, 61, 95);
-    }
-.everything{
+}
+
+.everything {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    
+
 }
 
+.iata-container {
+    color: rgb(52, 51, 73);
+    background-color: #ffffff3e;
+    border-radius: 10px;
+    padding: 50px;
+    font-weight: bold;
+}
