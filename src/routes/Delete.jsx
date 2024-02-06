@@ -32,7 +32,7 @@ function DeleteAccount() {
 
     return (
         <div>
-            <p>Please enter your password to confirm account deletion:</p>
+            <h2>Please enter your password to confirm account deletion:</h2>
 
             <input
                 placeholder="Enter Password"
