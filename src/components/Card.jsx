@@ -3,13 +3,13 @@ import { useState, useEffect, forwardRef } from 'react';
 import { createClient } from "pexels";
 import './Card.css';
 
-const Card = ({input, index }) => {
+const Card = ({ input, index }) => {
     //console.log("cardinput: ",input);
     const [img, setImg] = useState("");
     const client = createClient(
-        "KUtGlNdqoJMg2UmXPMQUPhtbFH40Dv2TBiega6ochAT3ij6ZfRPKe7pF"
-      );
-      
+        import.meta.env.VITE_IMAGE_API_KEY
+    );
+
     useEffect(() => {
         if (input === "") return;
 
@@ -17,7 +17,7 @@ const Card = ({input, index }) => {
             try {
                 const response = await fetch(`https://api.pexels.com/v1/search?per_page=1&query=${input}`, {
                     headers: {
-                        Authorization: "KUtGlNdqoJMg2UmXPMQUPhtbFH40Dv2TBiega6ochAT3ij6ZfRPKe7pF",
+                        Authorization: import.meta.env.VITE_IMAGE_API_KEY,
                     }
                 });
 
@@ -31,16 +31,16 @@ const Card = ({input, index }) => {
                 alert('Error fetching data:', error);
             }
         };
-        if(input != "") fetchData();
+        if (input != "") fetchData();
     }, [input]);
     //console.log(img);
-    
+
     return (
         <>
             {img != "" &&
                 <div className="card">
                     <p id="card-text">{input}</p>
-                    <img id="card-image" src = {img} alt={input}/>
+                    <img id="card-image" src={img} alt={input} />
                 </div>
             }
         </>
