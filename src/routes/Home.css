@@ -13,6 +13,17 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    font-size: 20px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.home__heading-text h1{
+    line-height: 100px;
+}
+
+.home__heading-text p{
+    color:rgb(244, 255, 255);
+    text-shadow: 1px 1px 10px #1e1b48;
 }
 
 
@@ -29,7 +40,6 @@
 }
 
 .home__heading-image img{
-    width: 100%;
-    height: 100%;
     object-fit: cover;
 }
+
