@@ -2,16 +2,17 @@ const express = require('express');
 const app = express();
 const path = require('path');
 
-const publicDirectory = path.join(__dirname, 'build'); // Assuming 'build' is your build output directory
+const publicDirectory = path.join(__dirname, 'dist'); // Assuming 'build' is your build output directory
 
 app.use(express.static(publicDirectory));
 
+// Serve JSX files with the correct MIME type
 app.get('*.jsx', (req, res) => {
   const requestedFilePath = path.join(publicDirectory, req.path);
 
   res.sendFile(requestedFilePath, {
     headers: {
-      'Content-Type': 'application/javascript',
+      'Content-Type': 'text/javascript', // Change to 'text/javascript' for JSX files
     },
   });
 });
